@@ -123,34 +123,50 @@
   // below the card's copy however tall the card gets. Anchoring it to the
   // bottom made its top edge land at whatever height was left over, which
   // on this card put the dots straight through the heading.
-  top: 46%;
+  top: 44%;
   bottom: auto;
   translate: -50% 0;
   // Sized so only the upper cap shows above the card's lower edge, as
   // in the reference — large enough to read as a globe, small enough
   // that the copy above it stays legible.
-  width: 74%;
+  width: 72%;
   aspect-ratio: 1;
   border-radius: 50%;
+  // Near-black, not the violet wash this used to carry. In the reference
+  // the sphere is barely a shade off the card and the dots do all the
+  // work; a saturated body turned it into a purple ball with dots on it.
   background: radial-gradient(
-    circle at 50% 34%,
-    #2a1240 0%,
-    #170b23 44%,
-    #0a0612 74%
+    circle at 50% 36%,
+    #14141b 0%,
+    #0d0d12 46%,
+    #08080b 76%
   );
-  box-shadow: 0 -26px 80px -26px rgba(var(--accent-rgb), 0.55),
-    inset 0 0 60px -10px rgba(var(--accent-rgb), 0.25);
+  box-shadow: 0 -20px 70px -30px rgba(var(--accent-rgb), 0.32),
+    inset 0 0 60px -14px rgba(var(--accent-rgb), 0.16);
 }
 
-.art-globe svg {
+// The dots and markers are painted here — see components/mini-globe.js.
+.art-globe canvas {
+  display: block;
   width: 100%;
   height: 100%;
-  fill: #b9b9cc;
 }
 
-.art-globe__site {
-  fill: var(--accent);
-  filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.95));
+// Faint sweeps crossing the whole card behind the sphere. Kept very low
+// contrast: in the reference these are barely present, and at any real
+// weight they compete with the dots instead of sitting behind them.
+.art-sweeps {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.art-sweeps path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.055);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
 
 // Grid of rounded tiles (OEM partner wall)
@@ -171,11 +187,24 @@
   border: 1px solid var(--line-dark-soft);
 }
 
-// The highlighted centre tile carries the accent
+// The centre tile is a light SOURCE, not a coloured square. In the
+// reference it is a glowing mass sitting in the grid and throwing light on
+// the tiles around it; a flat filled rectangle with a drop shadow read as
+// a selected state instead.
 .art-tiles i.is-lit {
-  background: linear-gradient(160deg, var(--accent-2), var(--accent));
-  border-color: transparent;
-  box-shadow: 0 10px 30px -10px rgba(var(--accent-rgb), 0.8);
+  position: relative;
+  background: radial-gradient(
+      circle at 50% 46%,
+      var(--accent-hot) 0%,
+      var(--accent-2) 26%,
+      var(--accent) 52%,
+      rgba(var(--accent-deep-rgb), 0.5) 78%,
+      transparent 100%
+    ),
+    linear-gradient(160deg, #1a1a1a, #101010);
+  border-color: rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 0 60px -6px rgba(var(--accent-rgb), 0.75),
+    0 0 26px -4px rgba(var(--accent-2-rgb), 0.6);
 }
 
 // Node cluster around a central mark
@@ -184,18 +213,21 @@
   inset: 0;
 }
 
+// Dead centre of the frame, which is what the four corner nodes point at.
 .art-nodes__hub {
   position: absolute;
   left: 50%;
-  top: 34%;
+  top: 50%;
   translate: -50% -50%;
   display: grid;
   place-items: center;
   width: 66px;
   height: 66px;
   border-radius: 18px;
-  background: linear-gradient(155deg, #232323, #141414);
-  border: 1px solid var(--line-dark);
+  background: linear-gradient(155deg, #242424, #141414);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 1);
+  z-index: 2;
 }
 
 .art-nodes__hub svg {
@@ -220,25 +252,18 @@
   height: 15px;
 }
 
+// One node lit, as the reference does — a single warm point in an
+// otherwise even ring is what stops the four reading as a decoration.
+.art-nodes__n.is-lit {
+  border-color: rgba(var(--accent-rgb), 0.45);
+  color: var(--accent-2);
+  box-shadow: 0 0 26px -2px rgba(var(--accent-rgb), 0.55);
+}
+
 .art-nodes__link {
   fill: none;
   stroke: rgba(255, 255, 255, 0.12);
   stroke-width: 1;
-}
-
-// A vertical accent streak (reference uses these as "data flowing in")
-.art-streak {
-  position: absolute;
-  width: 2px;
-  border-radius: 2px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--accent),
-    transparent
-  );
-  filter: blur(0.5px);
-  box-shadow: 0 0 12px 2px rgba(var(--accent-rgb), 0.65);
 }
 
 // Horizontal circuit traces (autoscaling card)
@@ -259,29 +284,63 @@
   filter: drop-shadow(0 0 5px rgba(var(--accent-rgb), 0.9));
 }
 
-// Shield / lock glyph on a soft disc (security card)
-.art-disc {
+// ---- Dark sphere in the corner (security card) ---------------
+// Deliberately barely brighter than the card. What makes it read as a
+// sphere is the off-centre highlight and the rim, not its fill.
+.art-orb {
   position: absolute;
-  left: 56%;
-  top: 62%;
-  translate: -50% -50%;
-  display: grid;
-  place-items: center;
-  width: 62%;
+  right: -14%;
+  bottom: -34%;
+  width: 78%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.02) 52%,
-    transparent 70%
+    circle at 38% 30%,
+    #1b1b21 0%,
+    #131318 40%,
+    #0b0b0e 72%
   );
+  box-shadow: inset 0 0 60px -12px rgba(var(--accent-rgb), 0.2),
+    inset 6px 10px 40px -18px rgba(255, 255, 255, 0.14);
 }
 
-.art-disc svg {
-  width: 26%;
-  color: rgba(255, 255, 255, 0.55);
-  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.9));
+// One spark crossing the orb — the only lit thing on the card.
+.art-spark {
+  position: absolute;
+  right: 22%;
+  bottom: 26%;
+  width: 92px;
+  height: 2px;
+  border-radius: 2px;
+  transform: rotate(-24deg);
+  transform-origin: 100% 50%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--accent-rgb), 0.5) 62%,
+    var(--accent-hot) 94%,
+    #fff
+  );
+  box-shadow: 0 0 18px 3px rgba(var(--accent-rgb), 0.5);
+}
+
+// ---- Framed inner surface (node graph card) ------------------
+.art-frame {
+  position: absolute;
+  left: clamp(1.1rem, 1.5vw, 1.5rem);
+  right: clamp(1.1rem, 1.5vw, 1.5rem);
+  top: clamp(1.1rem, 1.5vw, 1.5rem);
+  height: 58%;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line-dark);
+  background: linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.008) 50%,
+      transparent 80%
+    ),
+    #0b0b0b;
+  overflow: hidden;
 }
 
 // Stacked list rows (support / SLA card)

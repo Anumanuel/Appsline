@@ -432,6 +432,10 @@
       <!-- row 1 -->
       <article class="bento__card bento__card--wide bento__card--tall" data-reveal>
         <div class="bento__art" aria-hidden="true">
+          <svg class="art-sweeps" viewBox="0 0 620 400" preserveAspectRatio="none">
+            <path d="M-20 214 C 150 176 470 176 640 214"/>
+            <path d="M-20 300 C 160 250 460 250 640 300"/>
+          </svg>
           <div class="art-globe" data-mini-globe></div>
         </div>
         <div class="bento__head">
@@ -442,11 +446,16 @@
 
       <article class="bento__card bento__card--tall bento__card--copy-bottom" data-reveal>
         <div class="bento__art" aria-hidden="true">
-          <svg class="art-nodes" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
-            <path class="art-nodes__link" vector-effect="non-scaling-stroke" d="M150 100 L72 148M150 100 L228 148M150 130 L104 176M150 130 L196 176"/>
+          <!--
+            The graph sits on its own bordered surface, as the reference
+            does, with the four peripheral nodes pushed out to that surface's
+            corners. Loose on the card in a V under the hub they read as a
+            dropdown menu rather than a topology.
+          -->
+          <div class="art-frame">
+          <svg class="art-nodes" viewBox="0 0 300 220" preserveAspectRatio="none">
+            <path class="art-nodes__link" vector-effect="non-scaling-stroke" d="M150 110 L54 44M150 110 L246 44M150 110 L54 176M150 110 L246 176"/>
           </svg>
-          <span class="art-streak" style="left:50%;top:6%;height:70px"></span>
-          <span class="art-streak" style="left:66%;top:52%;height:52px"></span>
           <div class="art-nodes__hub">
             <svg viewBox="0 0 141 87">
               <rect x="0" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
@@ -458,10 +467,11 @@
               <rect x="129.3" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
             </svg>
           </div>
-          <span class="art-nodes__n" style="left:24%;top:49%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 14h6"/></svg></span>
-          <span class="art-nodes__n" style="left:76%;top:49%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></span>
-          <span class="art-nodes__n" style="left:35%;top:59%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l5.5 3v4c0 3-2.4 5-5.5 5S2.5 12 2.5 9V5L8 2Z"/></svg></span>
-          <span class="art-nodes__n" style="left:65%;top:59%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg></span>
+          <span class="art-nodes__n" style="left:18%;top:20%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 14h6"/></svg></span>
+          <span class="art-nodes__n" style="left:82%;top:20%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></span>
+          <span class="art-nodes__n" style="left:18%;top:80%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l5.5 3v4c0 3-2.4 5-5.5 5S2.5 12 2.5 9V5L8 2Z"/></svg></span>
+          <span class="art-nodes__n is-lit" style="left:82%;top:80%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg></span>
+          </div>
         </div>
         <div class="bento__head">
           <h3 class="bento__title">One accountable partner</h3>
@@ -472,10 +482,15 @@
       <!-- row 2 -->
       <article class="bento__card" data-reveal>
         <div class="bento__art" aria-hidden="true">
-          <div class="art-disc">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5 20 5.2v6.1c0 5-3.4 8.6-8 11.2-4.6-2.6-8-6.2-8-11.2V5.2L12 1.5Z" opacity=".28"/><path d="M13.4 6.4 8.2 13.2h3l-.6 4.6 5.2-6.9h-3l.6-4.5Z"/></svg>
-          </div>
-          <span class="art-streak" style="left:42%;top:44%;height:44px;transform:rotate(78deg)"></span>
+          <!--
+            A dark sphere running off the card's bottom-right corner with a
+            single spark crossing it. The reference's privacy card is almost
+            entirely empty space with one barely-lit mass in the corner; a
+            centred shield glyph on a soft disc, which is what was here, read
+            as an icon dropped on a panel rather than as artwork.
+          -->
+          <div class="art-orb"></div>
+          <span class="art-spark"></span>
         </div>
         <div class="bento__head">
           <h3 class="bento__title">Security-first approach</h3>
