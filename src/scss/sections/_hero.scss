@@ -188,8 +188,12 @@
 // coordinate system — as CSS flex children they were measured in px against
 // an SVG measured in viewBox units, and drifted off their traces at every
 // width except exactly 1440.
+//
+// Deliberately far heavier than the 1.3-wide traces they feed: in the
+// reference these read as solid metal tabs against hairline copper, and at
+// the old 3 units they disappeared into the traces instead.
 .circuit__pins rect {
-  fill: rgba(255, 255, 255, 0.34);
+  fill: rgba(255, 255, 255, 0.5);
 }
 
 // Soft halo under the chip

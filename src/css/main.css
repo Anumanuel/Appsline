@@ -1325,7 +1325,7 @@ html.is-nav-pill .announce {
 }
 
 .circuit__pins rect {
-  fill: rgba(255, 255, 255, 0.34);
+  fill: rgba(255, 255, 255, 0.5);
 }
 
 .circuit__chip::after {

@@ -464,11 +464,26 @@ animation always runs a path from start to end, so authoring the paths from
 the chip is what makes the light radiate out of it rather than crawl into it.
 Reverse a path's `d` and that one pulse runs backwards.
 
-Pin positions are `x 650/790` and `y 137,159,181,203` on the sides,
-`x 687,709,731,753` at top and bottom — 22 units apart, centred on a chip that
-spans 660-780 by 110-230. The corner radius is a uniform 16, which needs 32
-units of clearance in both axes, so the middle tile on each side is fed by a
-straight horizontal run at the pin's own y rather than a cornered one.
+Pins sit at `y 137,159,181,203` on the sides and `x 687,709,731,753`
+underneath — 22 apart, centred on a chip spanning 660-780 by 110-230. **There
+is no top row**: the reference's package has three populated edges and a bare
+top. They are 16 long by 6 thick, deliberately much heavier than the 1.3-wide
+traces they feed, so they read as metal tabs against hairline copper; at 3
+they vanished into the traces. A trace therefore starts at the pin's outer
+tip — `x 644/796`, `y 246` — not at the chip edge.
+
+**Routing is 45-degree, not orthogonal.** Each run breaks with a diagonal
+rather than a right angle. A corner is a quadratic whose control point sits
+where the two runs would have intersected, backed off 14 units along each —
+which is why diagonal endpoints carry `.1` decimals, 14 units along a
+45-degree line being 9.9 per axis.
+
+Pins 3 and 4 on each side break at the **same x** (560 / 880). Two 45-degree
+lines turning at a common x stay parallel, separated by the pin pitch over
+root two — 15.6 units — and that is what makes them read as one bundle peeling
+off the chip. Turning them at different x opened the gap to 44 and the bundle
+fell apart into two unrelated diagonals. The middle pin on each side runs dead
+straight to its tile, giving the bundle something to be symmetrical about.
 
 **One coordinate system, enforced.** The chip and tiles are DOM elements and
 the traces are SVG, so they only stay welded together if both scale by the

@@ -254,68 +254,79 @@
         Chip: 121 units square (8.4% of 1440), centred at (720,170).
           edges  x 660 / 780,  y 110 / 230
           pins   left+right at y 137,159,181,203  (22 apart, centred on 170)
-                 top+bottom at x 687,709,731,753  (22 apart, centred on 720)
-          Pins protrude 10 units, so a trace leaving the chip starts at the
-          pin's outer tip — x 650 / 790, y 100 / 240 — not at the chip edge.
+                 bottom     at x 687,709,731,753  (22 apart, centred on 720)
+          There are NO top pins — the reference's package has three populated
+          edges and a bare top, and drawing a fourth row was an invention.
+          Pins are 16 long by 6 thick, chunky tabs rather than hairlines, so
+          a trace leaving the chip starts at the pin's outer tip: x 644 / 796
+          on the sides, y 246 underneath.
 
         Every one of the 12 traces STARTS at a pin. That direction is the
         whole point: js/animations/circuit.js runs each pulse from path
         start to path end, so pulses radiate outward from the chip instead
         of crawling inward toward it.
 
-        Corner radius is a uniform 16, which needs 32 units of clearance in
-        both axes — the middle tile on each side is therefore fed by a
-        straight horizontal run at the pin's own y, not a cornered one.
+        ROUTING IS 45-DEGREE, NOT ORTHOGONAL. The reference breaks each run
+        with a diagonal rather than a right angle, and the diagonals on a
+        side are parallel, so they read as one bundle fanning out of the
+        chip. A corner is a quadratic whose control point sits on the
+        intersection the two runs would have made, 14 units back along each
+        — which is why the diagonal endpoints carry .1 decimals: 14 units
+        along a 45-degree line is 9.9 in each axis.
+
+        The middle pin on each side runs dead straight to its tile. The
+        reference does the same, and it gives the bundle something to be
+        symmetrical about.
+
+        Pins 3 and 4 on each side break at the SAME x (560 / 880). Two
+        45-degree lines that turn at a common x stay parallel, separated by
+        the pin pitch over root two — 15.6 units — which is what makes them
+        read as one bundle peeling off the chip rather than two unrelated
+        diagonals. Turning them at different x, as a first pass did, opened
+        that gap to 44 and the bundle fell apart.
       -->
       <g class="circuit__traces">
         <!-- chip LEFT pins → three tiles, then one exit through the floor -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 137 H446 Q430 137 430 121 V74 Q430 58 414 58 H217"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 159 H127"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 181 H576 Q560 181 560 197 V284 Q560 300 544 300 H217"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 203 H516 Q500 203 500 219 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M644 137 H414 Q400 137 390.1 127.1 L330.9 67.9 Q321 58 307 58 H217"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M644 159 H127"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M644 181 H574 Q560 181 550.1 190.9 L450.9 290.1 Q441 300 427 300 H217"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M644 203 H574 Q560 203 550.1 212.9 L439.9 323.1 Q430 333 430 347 V380"/>
 
         <!-- chip RIGHT pins, mirrored about x=720 -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 137 H994 Q1010 137 1010 121 V74 Q1010 58 1026 58 H1223"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 159 H1313"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 181 H864 Q880 181 880 197 V284 Q880 300 896 300 H1223"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 203 H924 Q940 203 940 219 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M796 137 H1026 Q1040 137 1049.9 127.1 L1109.1 67.9 Q1119 58 1133 58 H1223"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M796 159 H1313"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M796 181 H866 Q880 181 889.9 190.9 L989.1 290.1 Q999 300 1013 300 H1223"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M796 203 H866 Q880 203 889.9 212.9 L1000.1 323.1 Q1010 333 1010 347 V380"/>
 
         <!-- chip BOTTOM pins: four short legs straight down to the floor -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M687 240 V380"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M709 240 V380"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M731 240 V380"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M753 240 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M687 246 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M709 246 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M731 246 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M753 246 V380"/>
       </g>
 
       <!--
-        Chip pins, drawn here rather than as CSS pseudo-elements on the chip.
-        They share the traces' coordinate system, so a pin and the trace
-        leaving it cannot drift apart no matter how the board is scaled —
-        which is exactly what happened when they were CSS flex children
-        measured in px against an SVG measured in viewBox units.
-        The top row carries no trace; it is there because a real package has
-        pins on all four edges.
+        Chip pins, drawn here rather than as CSS children of the chip. They
+        share the traces' coordinate system, so a pin and the trace leaving
+        it cannot drift apart no matter how the board is scaled — which is
+        exactly what happened when they were flex items measured in px
+        against an SVG measured in viewBox units.
       -->
       <g class="circuit__pins">
-        <rect x="650" y="135.5" width="10" height="3" rx="1.5"/>
-        <rect x="650" y="157.5" width="10" height="3" rx="1.5"/>
-        <rect x="650" y="179.5" width="10" height="3" rx="1.5"/>
-        <rect x="650" y="201.5" width="10" height="3" rx="1.5"/>
+        <rect x="644" y="134" width="16" height="6" rx="3"/>
+        <rect x="644" y="156" width="16" height="6" rx="3"/>
+        <rect x="644" y="178" width="16" height="6" rx="3"/>
+        <rect x="644" y="200" width="16" height="6" rx="3"/>
 
-        <rect x="780" y="135.5" width="10" height="3" rx="1.5"/>
-        <rect x="780" y="157.5" width="10" height="3" rx="1.5"/>
-        <rect x="780" y="179.5" width="10" height="3" rx="1.5"/>
-        <rect x="780" y="201.5" width="10" height="3" rx="1.5"/>
+        <rect x="780" y="134" width="16" height="6" rx="3"/>
+        <rect x="780" y="156" width="16" height="6" rx="3"/>
+        <rect x="780" y="178" width="16" height="6" rx="3"/>
+        <rect x="780" y="200" width="16" height="6" rx="3"/>
 
-        <rect x="685.5" y="230" width="3" height="10" rx="1.5"/>
-        <rect x="707.5" y="230" width="3" height="10" rx="1.5"/>
-        <rect x="729.5" y="230" width="3" height="10" rx="1.5"/>
-        <rect x="751.5" y="230" width="3" height="10" rx="1.5"/>
-
-        <rect x="685.5" y="100" width="3" height="10" rx="1.5"/>
-        <rect x="707.5" y="100" width="3" height="10" rx="1.5"/>
-        <rect x="729.5" y="100" width="3" height="10" rx="1.5"/>
-        <rect x="751.5" y="100" width="3" height="10" rx="1.5"/>
+        <rect x="684" y="230" width="6" height="16" rx="3"/>
+        <rect x="706" y="230" width="6" height="16" rx="3"/>
+        <rect x="728" y="230" width="6" height="16" rx="3"/>
+        <rect x="750" y="230" width="6" height="16" rx="3"/>
       </g>
 
       <!-- Pulses are cloned from the traces above at runtime. -->
