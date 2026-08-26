@@ -68,14 +68,62 @@ function traceLight(root) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Shield pulse rings                                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Rings expanding out of the security card's shield.
+ *
+ * One timeline driving all three rings on a stagger, rather than three CSS
+ * keyframe animations: it pauses with the rest of the section when that
+ * scrolls out of view, and it is simply never created under reduced
+ * motion. A CSS animation would keep running off-screen, and the global
+ * reduced-motion rule only collapses its duration — which snaps the rings
+ * to their end state rather than leaving them alone.
+ *
+ * Scale and opacity only, so each ring stays on the compositor.
+ */
+function shieldPulse(root) {
+  const rings = Array.from(root.querySelectorAll(".art-shield__pulse"));
+  if (!rings.length) return null;
+
+  const tl = gsap.timeline({ repeat: -1, paused: true });
+  const STEP = 1.15;
+
+  rings.forEach((ring, i) => {
+    const at = i * STEP;
+
+    tl.fromTo(
+      ring,
+      { scale: 0.72, opacity: 0 },
+      { scale: 2.4, duration: 3.2, ease: "power2.out" },
+      at
+    )
+      // Brightens as it leaves the shield, then thins out as it expands —
+      // a ring that faded linearly read as a flat disc growing.
+      .to(ring, { opacity: 0.6, duration: 0.5, ease: "power2.out" }, at)
+      .to(ring, { opacity: 0, duration: 2.2, ease: "power1.in" }, at + 1);
+  });
+
+  tl.set({}, {}, rings.length * STEP);
+  return tl;
+}
+
+/* ------------------------------------------------------------------ */
 
 export function initBento() {
   const section = document.getElementById("why");
   if (!section) return;
 
-  if (prefersReducedMotion) return;
+  // The pulse rings start invisible so they can fade in as they expand.
+  // With motion off nothing would ever raise them, so hand the section a
+  // static state that holds one ring instead of leaving the shield bare.
+  if (prefersReducedMotion) {
+    section.classList.add("is-static");
+    return;
+  }
 
-  const loops = [traceLight(section)].filter(Boolean);
+  const loops = [traceLight(section), shieldPulse(section)].filter(Boolean);
 
   if (loops.length) {
     // Only burn frames while the section is on screen.
