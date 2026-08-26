@@ -1,0 +1,80 @@
+// ============================================================
+//  CTA  (dark panel, inset)
+//  Reference: a rounded panel inset from the page edges, filled
+//  from the bottom by an enormous glow that runs black → accent →
+//  white at the very bottom edge. Heading, lead and a single
+//  light pill sit over it.
+// ============================================================
+
+.cta-band {
+  position: relative;
+  background: var(--bg-dark);
+  padding-block: 0 clamp(3rem, 6vw, 5rem);
+  // Carries the same full-viewport floor the `.section` sections get; it
+  // does not use that class because its panel supplies its own padding.
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  // Reference panel is ~786px tall with the heading at 54% and the
+  // button at 75%, so the padding is close to symmetric and the glow
+  // occupies the space below rather than being padded out of the way.
+  min-height: clamp(460px, 68vh, 720px);
+  padding: clamp(5rem, 12vw, 9.5rem) var(--gutter) clamp(6rem, 13vw, 10.5rem);
+  border-radius: 28px;
+  overflow: hidden;
+  background: #050505;
+  isolation: isolate;
+}
+
+.cta__content {
+  position: relative;
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+// One line in the reference, so the section-head measure is lifted.
+.cta__title {
+  max-width: none;
+  font-weight: 600;
+}
+
+.cta__lead {
+  max-width: 470px;
+}
+
+.cta .btn {
+  margin-top: 0.5rem;
+}
+
+// A soft light pill, matching the reference's frosted button.
+.btn--frost {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a0a0a;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+}
+
+.btn--frost:hover {
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .cta {
+    min-height: 420px;
+    padding-bottom: 9rem;
+  }
+}

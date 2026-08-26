@@ -1,0 +1,123 @@
+// ============================================================
+//  PRELOADER
+//  Reference beat sheet (timings read off the video):
+//   0.0s  a single dot at centre
+//   0.4s  a ring blooms around it and the dot fills out
+//   1.2s  the mark resolves (bars grow out of the dot, staggered)
+//   1.9s  the wordmark writes on to the right of the mark
+//   2.8s  the whole panel lifts away, revealing the hero
+// ============================================================
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: grid;
+  place-items: center;
+  background: #0f0f0f;
+}
+
+.preloader__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+// ---- Ring + dot ----------------------------------------------
+// Anchored to the preloader itself (not the stage) so they sit at
+// true viewport centre — which is exactly where the mark resolves
+// while the wordmark still has zero width.
+
+.pre-ring,
+.pre-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.pre-ring {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  opacity: 0;
+}
+
+.pre-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+// ---- Mark (the seven bars) ----------------------------------
+
+.pre-mark {
+  width: 58px;
+  height: 40px;
+  flex: none;
+  opacity: 0;
+}
+
+.pre-mark rect {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+// ---- Wordmark ------------------------------------------------
+
+// Width animates 0 → auto so the whole lockup re-centres as the
+// wordmark writes on, exactly as the reference does.
+.pre-word {
+  display: flex;
+  overflow: hidden;
+  width: 0;
+  padding-left: 0;
+  font-size: 2.6rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.pre-word span {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+// ---- Progress hairline ---------------------------------------
+
+.preloader__bar {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  translate: -50% 0;
+  width: min(240px, 40vw);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.preloader__bar i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+@media (max-width: 560px) {
+  .pre-word {
+    font-size: 1.9rem;
+  }
+  .pre-mark {
+    width: 44px;
+    height: 30px;
+  }
+}

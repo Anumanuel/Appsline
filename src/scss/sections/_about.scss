@@ -1,0 +1,186 @@
+// ============================================================
+//  ABOUT  (light)
+//  Reference: centred badge-tabs, a bold two-line H2, then a
+//  wide white card — dark visual tile on the left, a bold
+//  statement plus muted copy on the right, and three rows of
+//  horizontally scrolling capability chips in the lower right.
+// ============================================================
+
+.about {
+  background: var(--bg-light);
+  color: var(--ink-on-light);
+  overflow: hidden;
+}
+
+.about__tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 1.75rem;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 32px;
+  padding-inline: 0.95rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-badge);
+  font-weight: 500;
+  color: var(--ink-on-light-2);
+  background: transparent;
+  transition: background var(--t-fast) var(--e-out),
+    color var(--t-fast) var(--e-out);
+}
+
+.tab:hover {
+  background: rgba(10, 10, 10, 0.06);
+  color: var(--ink-on-light);
+}
+
+.tab.is-active {
+  background: #101010;
+  color: #fff;
+}
+
+.tab svg {
+  width: 13px;
+  height: 13px;
+}
+
+// Two lines, as in the reference — the break is forced in the markup.
+.about__title {
+  margin-inline: auto;
+  text-align: center;
+  text-wrap: balance;
+}
+
+// ---- Card ----------------------------------------------------
+
+.about__card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+  margin-top: clamp(2.25rem, 4.5vw, 3.75rem);
+  padding: clamp(1rem, 1.6vw, 1.5rem);
+  border-radius: var(--r-2xl);
+  background: var(--surface-light);
+  box-shadow: 0 32px 80px -48px rgba(10, 10, 10, 0.5),
+    0 2px 6px -2px rgba(10, 10, 10, 0.06);
+}
+
+// ---- Visual tile ---------------------------------------------
+
+.about__visual {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(320px, 40vw, 520px);
+  padding: clamp(1.25rem, 2vw, 2rem);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: #0b0b0b;
+  isolation: isolate;
+}
+
+// The reference's card beam mirrors the hero's: it enters at the
+// top-LEFT and rakes down-right, so the shaft is anchored at its left
+// end and swung clockwise.
+.about__visual .beam__shaft {
+  top: -60px;
+  left: -30%;
+  right: auto;
+  width: 135%;
+  height: 150px;
+  transform-origin: 0% 50%;
+  transform: rotate(52deg);
+  // Source (white) at the left end; the hard edge sits outside the tile.
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffffff 40%,
+    rgba(var(--accent-hot-rgb), 0.95) 47%,
+    rgba(var(--accent-rgb), 0.85) 60%,
+    rgba(var(--accent-rgb), 0.35) 80%,
+    transparent 100%
+  );
+  filter: blur(30px);
+  opacity: 0.85;
+}
+
+.about__visual .beam__streak {
+  display: none;
+}
+
+.about__visual .beam__core {
+  top: -70px;
+  left: -14%;
+  right: auto;
+  width: 46%;
+  height: 240px;
+  filter: blur(34px);
+  opacity: 0.8;
+}
+
+.about__visual-caption {
+  position: relative;
+  z-index: 2;
+  max-width: 22ch;
+  font-size: clamp(1rem, 1.35vw, 1.22rem);
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.018em;
+  color: #fff;
+}
+
+// ---- Copy ----------------------------------------------------
+
+.about__body {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 2.4vw, 2.75rem) clamp(0.5rem, 1.6vw, 1.75rem)
+    clamp(1rem, 1.6vw, 1.5rem);
+}
+
+.about__statement {
+  font-size: clamp(1.15rem, 1.72vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: -0.022em;
+  color: var(--ink-on-light);
+  max-width: 26ch;
+}
+
+.about__note {
+  margin-top: 1.25rem;
+  max-width: 44ch;
+  font-size: var(--fs-sm);
+  line-height: 1.62;
+  color: var(--ink-on-light-3);
+}
+
+.about__chips {
+  margin-top: auto;
+  padding-top: clamp(2rem, 5vw, 4rem);
+  // Chips bleed off the right edge of the card, as in the reference.
+  margin-right: clamp(-1.5rem, -1.6vw, -1rem);
+}
+
+@media (max-width: 992px) {
+  .about__card {
+    // minmax(0, 1fr), not 1fr: the marquee's min-content width is far
+    // wider than the viewport and would otherwise stretch the column
+    // and push the whole card off-screen.
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about__visual {
+    min-height: 300px;
+  }
+
+  .about__chips {
+    margin-right: 0;
+    padding-top: 2rem;
+  }
+}

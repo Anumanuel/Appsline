@@ -1,0 +1,93 @@
+// ============================================================
+//  BRAND LOCKUP
+//  The official Appsline logo is a stacked lockup. The reference
+//  site uses a horizontal one, so the two official elements are
+//  re-laid-out side by side: the mark is redrawn as vectors from
+//  the source file's geometry, and the wordmark is the original
+//  artwork cropped out of it — letterforms untouched.
+//  On dark surfaces the wordmark is driven to pure white with a
+//  filter rather than being re-typeset.
+// ============================================================
+
+// The wrapper spans carry the lockup height, so they must not stay inline.
+.nav__lockup,
+.footer__lockup {
+  display: inline-flex;
+  align-items: center;
+}
+
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.52em;
+  height: 100%;
+  font-size: inherit;
+}
+
+.lockup__mark {
+  height: 100%;
+  width: auto;
+  flex: none;
+}
+
+// Wordmark cap-height is ~62% of the mark's height in the
+// original lockup; matching that keeps the optical balance.
+.lockup__word {
+  height: 62%;
+  width: auto;
+  flex: none;
+}
+
+// White treatment for dark surfaces (preserves letterforms exactly).
+.nav .lockup__word,
+.footer .lockup__word,
+.preloader .lockup__word {
+  filter: brightness(0) invert(1);
+}
+
+// Mono-white mark for dark surfaces
+.nav__lockup .lockup__mark rect:nth-child(even) {
+  fill: rgba(255, 255, 255, 0.72);
+}
+.nav__lockup .lockup__mark rect:nth-child(odd) {
+  fill: #ffffff;
+}
+
+// The footer keeps full brand colour on the mark, as the
+// reference footer does with its own logo.
+
+// ============================================================
+//  Tile wordmarks
+//  Partner names set as short lowercase monograms inside the
+//  circuit / portal tiles — no third-party marks are redrawn.
+// ============================================================
+
+.tile-txt {
+  font-size: clamp(8px, 0.72vw, 10px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1;
+  text-align: center;
+}
+
+.tile-txt--ink {
+  color: rgba(10, 10, 10, 0.62);
+  font-size: 10px;
+}
+
+// ============================================================
+//  Responsive line-break helpers
+//  Headings must wrap where the reference wraps them.
+// ============================================================
+
+.br-lg {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .br-lg {
+    display: inline;
+  }
+}

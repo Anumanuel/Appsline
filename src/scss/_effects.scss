@@ -1,0 +1,383 @@
+// ============================================================
+//  ATMOSPHERE
+//  The reference's signature light language: a hard diagonal
+//  beam across the hero, a faint square grid, and huge soft
+//  radial glows bleeding out of section edges.
+// ============================================================
+
+// ---- Faint square grid (hero + dark sections) ---------------
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+      to right,
+      var(--line-dark-soft) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--line-dark-soft) 1px, transparent 1px);
+  // Reference grid pitch measured at ~240px @1440.
+  background-size: 240px 240px;
+  // Fade the grid out toward the edges so it never reads as a hard texture.
+  -webkit-mask-image: radial-gradient(
+    ellipse 84% 66% at 52% 40%,
+    #000 12%,
+    transparent 74%
+  );
+  mask-image: radial-gradient(
+    ellipse 84% 66% at 52% 40%,
+    #000 12%,
+    transparent 74%
+  );
+  opacity: 0.55;
+}
+
+// ---- The diagonal hero beam ---------------------------------
+// Built from three stacked layers: a hot core near the corner,
+// the long tapering shaft, and a wide soft bloom around both.
+.beam {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.beam__shaft,
+.beam__core,
+.beam__bloom {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+// The shaft: a long, narrow bar anchored at the top-right corner and
+// swung down-left. Keeping it genuinely narrow (a fixed height rather
+// than a percentage) is what makes it read as a beam instead of a wash
+// once the blur is applied.
+// Reference beam runs from the top-right corner down to roughly
+// (75%, 46%) of the hero — about 470px long at 41 degrees.
+// The element's own right edge is a hard cut, so it is pushed past the
+// viewport and the gradient peaks earlier (57%) to put the white-hot
+// point on-canvas near the corner.
+// Offsets are in px, not %, because the hero's height varies with its
+// content and the beam's entry point must not drift with it.
+// Geometry: right end (1613, -52) at -41deg puts the shaft across the
+// right edge at y=100 and its far end near (1070, 315) — the reference's
+// entry point and reach.
+.beam__shaft {
+  top: -96px;
+  right: -12%;
+  width: 50%;
+  height: 88px;
+  transform-origin: 100% 50%;
+  // Negative: with the origin at the right end, a clockwise rotation
+  // would swing the far end up and off-canvas.
+  transform: rotate(-41deg);
+  // Brightest at the source (right end), tapering away down-left. The
+  // reference stays bright a long way down the shaft before falling off,
+  // so the hot stops sit well before the end.
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--accent-deep-rgb), 0.35) 14%,
+    rgba(var(--accent-rgb), 0.85) 36%,
+    rgba(var(--accent-2-rgb), 0.95) 47%,
+    rgba(var(--accent-hot-rgb), 0.97) 53%,
+    #ffffff 57%,
+    #ffffff 100%
+  );
+  // Soften across the width, but keep a solid core so the shaft still
+  // reads as a beam with edges rather than a wash.
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 32%,
+    #000 68%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 32%,
+    #000 68%,
+    transparent 100%
+  );
+  filter: blur(20px);
+  opacity: 0.92;
+}
+
+// A tighter, brighter streak riding inside the shaft.
+.beam__streak {
+  position: absolute;
+  top: -38px;
+  right: -10%;
+  width: 44%;
+  height: 24px;
+  transform-origin: 100% 50%;
+  // Negative: with the origin at the right end, a clockwise rotation
+  // would swing the far end up and off-canvas.
+  transform: rotate(-41deg);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--accent-rgb), 0.3) 30%,
+    rgba(var(--accent-hot-rgb), 0.8) 52%,
+    #ffffff 62%,
+    #ffffff 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 46%,
+    #000 54%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 46%,
+    #000 54%,
+    transparent
+  );
+  filter: blur(7px);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+// White-hot entry point where the beam crosses the corner.
+.beam__core {
+  top: -10px;
+  right: -3%;
+  width: 15%;
+  height: 200px;
+  background: radial-gradient(
+    ellipse at 58% 46%,
+    #ffffff 0%,
+    rgba(var(--accent-hot-rgb), 0.75) 22%,
+    rgba(var(--accent-rgb), 0.34) 46%,
+    transparent 72%
+  );
+  filter: blur(26px);
+  opacity: 0.95;
+}
+
+// Wide low-frequency bloom that ties the beam into the background.
+// The reference's hero is not flat black — a broad warm haze spreads
+// from the beam across most of the upper half.
+.beam__bloom {
+  top: -34%;
+  right: -24%;
+  width: 96%;
+  height: 118%;
+  background: radial-gradient(
+    ellipse at 74% 30%,
+    rgba(var(--accent-rgb), 0.14) 0%,
+    rgba(var(--accent-rgb), 0.06) 30%,
+    rgba(var(--accent-rgb), 0.022) 52%,
+    transparent 72%
+  );
+  // No blur here on purpose: the gradient's own falloff is already
+  // smooth, and a 90px blur over an element this large is one of the
+  // most expensive things on the page to paint.
+}
+
+// ---- Big soft glow that rises out of a section edge ----------
+// Used behind the CTA panel and under the globe.
+.edge-glow {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  width: 150%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+// Reference: the glow fills the lower ~55% of the panel, running white
+// at the very bottom edge through saturated accent and out to black.
+// The ellipse is deliberately wider than the panel so the white band
+// runs the full width at the bottom edge instead of tapering to a spot,
+// which is what the reference does.
+.edge-glow--bottom {
+  bottom: -2%;
+  height: 94%;
+  // Ramps through the full accent range rather than one hue — the
+  // reference's orange passes through pale, mid and deep tones on the
+  // way out, and a single-hue ramp reads flat by comparison.
+  background: radial-gradient(
+    ellipse 96% 100% at 50% 104%,
+    #ffffff 0%,
+    #ffffff 7%,
+    rgba(var(--accent-hot-rgb), 0.98) 14%,
+    rgba(var(--accent-2-rgb), 1) 23%,
+    rgba(var(--accent-rgb), 1) 34%,
+    rgba(var(--accent-rgb), 0.8) 45%,
+    rgba(var(--accent-deep-rgb), 0.42) 57%,
+    rgba(var(--accent-deep-rgb), 0.12) 70%,
+    transparent 84%
+  );
+  filter: blur(12px);
+}
+
+// ---- Corner / ambient washes --------------------------------
+// Washes rely on their gradient falloff rather than a filter — a blur
+// this wide costs more to paint than the effect is worth.
+.wash {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wash--tr {
+  top: -18%;
+  right: -12%;
+  width: 58%;
+  height: 62%;
+  background: radial-gradient(
+    ellipse at 70% 28%,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 68%
+  );
+}
+
+.wash--bl {
+  bottom: -22%;
+  left: -14%;
+  width: 62%;
+  height: 58%;
+  background: radial-gradient(
+    ellipse at 26% 74%,
+    rgba(var(--accent-2-rgb), 0.14),
+    transparent 68%
+  );
+}
+
+// ---- Star field (globe + footer) ----------------------------
+// Deterministic: positions come from a fixed list, never random.
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+.stars span {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: var(--o, 0.5);
+  animation: twinkle var(--dur, 4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: calc(var(--o, 0.5) * 0.35);
+  }
+  50% {
+    opacity: var(--o, 0.5);
+  }
+}
+
+// ---- Rising ember streaks -----------------------------------
+// The about card's artwork in the reference never stops moving: short
+// vertical light streaks climb through it, elongating and brightening as
+// they go. Geometry is written from JS (animations/embers.js); this is
+// only the look of one streak.
+.embers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+// Length is a percentage of the tile, not a pixel count: in the reference
+// a streak spans 15-22% of its card's height, and that card is far shorter
+// than this one, so a fixed px length would read as a speck here.
+.ember {
+  position: absolute;
+  width: 2.5px;
+  height: var(--h, 14%);
+  border-radius: 2px;
+  opacity: 0;
+  transform-origin: 50% 100%;
+  // transform and opacity only — the climb rides translate, not `top`,
+  // so a streak never triggers layout.
+  will-change: transform, opacity;
+  background: linear-gradient(
+    to top,
+    transparent,
+    rgba(var(--accent-rgb), 0.6) 24%,
+    rgba(var(--accent-2-rgb), 0.95) 62%,
+    rgba(var(--accent-hot-rgb), 1) 88%,
+    #ffffff 100%
+  );
+  // No blur filter: on a moving element it forces its own paint pass every
+  // frame, and the gradient's soft ends already give the streak the falloff
+  // it needs.
+}
+
+// One layer for all six streaks rather than six promoted elements.
+.embers {
+  transform: translateZ(0);
+  contain: paint;
+}
+
+// ---- Card sheen ---------------------------------------------
+// Subtle top-left highlight on dark cards, matching the reference.
+.sheen {
+  position: relative;
+  isolation: isolate;
+}
+
+.sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.02) 42%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+// ---- Reveal primitives (GSAP sets the final state) ----------
+// Kept out of the DOM's initial paint so nothing flashes.
+.js [data-reveal] {
+  opacity: 0;
+}
+
+.js [data-split] {
+  opacity: 0;
+}
+
+// Word boxes produced by utils/split-text.js.
+//
+// Deliberately NOT clipped. Frame-stepping the reference shows each word
+// arriving *below* its baseline while already visible — dim and blurred,
+// then rising, sharpening and brightening (clearest on the globe heading,
+// 18.35-18.89s, where "for" is legible below "network"'s line the whole
+// way in). An overflow-hidden line box would hide exactly that, so the
+// travel is a short offset rather than a full line-height slide.
+.word {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.word__i {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}

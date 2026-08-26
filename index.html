@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appsline — Next-Generation Security for Critical Infrastructure</title>
+<meta name="description" content="Appsline engineers the technological backbone of modern enterprises — structured cabling, IT infrastructure, video surveillance, unified communication and cyber security across UAE, Oman and India.">
+<link rel="icon" type="image/png" sizes="32x32" href="src/assets/logo/appsline-mark.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="src/css/main.css">
+
+<!-- Marks the document as script-capable so reveal states only hide when GSAP can restore them. -->
+<script>document.documentElement.className += " js";</script>
+
+<!--
+  Failsafe. The preloader covers the page and the reveal states start at
+  opacity 0, so if the bundle fails to load or throws before booting, the
+  visitor is left staring at a black screen. This tears the loader down
+  and restores every hidden element after 6s no matter what happened.
+-->
+<script>
+(function () {
+  var FAILSAFE_MS = 6000;
+
+  function rescue(reason) {
+    if (window.__appslineBooted) return;
+    console.warn("Appsline: boot did not complete (" + reason + ") — showing page without motion.");
+
+    var pre = document.getElementById("preloader");
+    if (pre) pre.style.display = "none";
+    document.body && document.body.classList.remove("is-loading");
+
+    // Undo the pre-animation hidden states so nothing stays invisible.
+    document.documentElement.classList.remove("js");
+    var hidden = document.querySelectorAll("[data-reveal], [data-split]");
+    for (var i = 0; i < hidden.length; i++) hidden[i].style.opacity = "1";
+  }
+
+  window.addEventListener("error", function (e) {
+    if (e.target && e.target.tagName === "SCRIPT") rescue("script failed to load");
+  }, true);
+
+  setTimeout(function () { rescue("timeout"); }, FAILSAFE_MS);
+})();
+</script>
+
+<noscript>
+  <style>
+    #preloader { display: none !important; }
+    body.is-loading { overflow: auto !important; height: auto !important; }
+    [data-reveal], [data-split] { opacity: 1 !important; }
+  </style>
+</noscript>
+</head>
+
+<body class="is-loading">
+
+<!-- ══════════════════════════════════════════════════════════
+     PRELOADER — dot → ring → mark → wordmark → lift away
+     ══════════════════════════════════════════════════════════ -->
+<div class="preloader" id="preloader">
+  <span class="pre-ring" aria-hidden="true"></span>
+  <span class="pre-dot" aria-hidden="true"></span>
+
+  <div class="preloader__stage">
+    <svg class="pre-mark" viewBox="0 0 141 87" aria-hidden="true">
+      <rect x="0"       y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+      <rect x="21.55"   y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+      <rect x="43.1"    y="0"    width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+      <rect x="64.65"   y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+      <rect x="86.2"    y="0"    width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+      <rect x="107.75"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+      <rect x="129.3"   y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+    </svg>
+
+    <div class="pre-word" aria-label="appsline">
+      <span>a</span><span>p</span><span>p</span><span>s</span><span>l</span><span>i</span><span>n</span><span>e</span>
+    </div>
+  </div>
+
+  <div class="preloader__bar"><i></i></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     ANNOUNCEMENT STRIP
+     ══════════════════════════════════════════════════════════ -->
+<div class="announce" id="announce">
+  <div class="announce__inner">
+    <a class="announce__msg" href="#contact">
+      <span class="announce__dot"></span>
+      Now delivering across UAE, Oman &amp; India — talk to our infrastructure team
+      <svg class="announce__arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+    <div class="announce__side">
+      <a href="#portal">Customer Portal</a>
+      <a href="#contact">Support</a>
+      <span class="announce__lang">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="6.4"/><path d="M1.6 8h12.8M8 1.6c1.7 1.8 2.6 4 2.6 6.4S9.7 12.6 8 14.4C6.3 12.6 5.4 10.4 5.4 8S6.3 3.4 8 1.6Z"/></svg>
+        EN
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     NAV — morphs into a centred floating pill on scroll
+     ══════════════════════════════════════════════════════════ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+
+    <a class="nav__brand" href="#top" aria-label="Appsline home">
+      <!-- Full lockup at rest -->
+      <span class="nav__lockup" id="navLockup">
+        <span class="lockup">
+          <svg class="lockup__mark" viewBox="0 0 141 87" aria-hidden="true">
+            <rect x="0"      y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+            <rect x="21.55"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+            <rect x="43.1"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+            <rect x="64.65"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+            <rect x="86.2"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+            <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+            <rect x="129.3"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+          </svg>
+          <img class="lockup__word" src="src/assets/logo/appsline-wordmark.png" alt="Appsline">
+        </span>
+      </span>
+
+      <!-- Compact mark inside the pill -->
+      <span class="nav__mark" aria-hidden="true">
+        <svg viewBox="0 0 141 87">
+          <rect x="0"      y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+          <rect x="21.55"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.72)"/>
+          <rect x="43.1"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+          <rect x="64.65"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.72)"/>
+          <rect x="86.2"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+          <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.72)"/>
+          <rect x="129.3"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+        </svg>
+      </span>
+    </a>
+
+    <nav class="nav__menu" aria-label="Primary">
+      <div class="nav__item"><a class="nav__link" href="#top">Home</a></div>
+      <div class="nav__item"><a class="nav__link" href="#about">About us</a></div>
+
+      <div class="nav__item">
+        <a class="nav__link" href="#solutions">Services
+          <svg class="nav__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+        </a>
+        <div class="nav__panel">
+          <a href="#solutions">Structured Cabling</a>
+          <a href="#solutions">IT Infrastructure</a>
+          <a href="#solutions">Video Surveillance</a>
+          <a href="#solutions">IP-PBX &amp; Unified Communication</a>
+          <a href="#solutions">Public Address System</a>
+          <a href="#solutions">Access Control &amp; Time Attendance</a>
+          <a href="#solutions">IT Support and C-AMC</a>
+        </div>
+      </div>
+
+      <div class="nav__item"><a class="nav__link" href="#industries">Project Gallery</a></div>
+
+      <div class="nav__item">
+        <a class="nav__link" href="#portal">Portal
+          <svg class="nav__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+        </a>
+        <div class="nav__panel">
+          <a href="#portal">Customer Portal — UAE</a>
+          <a href="#portal">Customer Portal — Oman</a>
+          <a href="#portal">Customer Portal — India</a>
+          <a href="#portal">Digital Profile</a>
+        </div>
+      </div>
+
+      <div class="nav__item"><a class="nav__link" href="#contact">Contact us</a></div>
+    </nav>
+
+    <div class="nav__actions">
+      <a class="btn btn--ghost nav__ghost" href="#portal">Customer Portal</a>
+      <a class="btn btn--accent nav__cta" href="#contact">Get Support</a>
+      <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<div class="nav-sheet" id="navSheet">
+  <a href="#top">Home</a>
+  <a href="#about">About us</a>
+  <a href="#solutions">Services</a>
+  <a href="#industries">Project Gallery</a>
+  <a href="#portal">Customer Portal</a>
+  <a href="#contact">Contact us</a>
+  <a class="btn btn--accent" href="#contact">Get Support</a>
+</div>
+
+
+<main id="top">
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="beam" aria-hidden="true">
+    <span class="beam__bloom"></span>
+    <span class="beam__shaft"></span>
+    <span class="beam__streak"></span>
+    <span class="beam__core"></span>
+  </div>
+
+  <div class="container hero__inner">
+    <span class="badge" data-reveal>
+      <svg class="badge__spark" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l1.6 4.6L14 6.2l-4.4 1.6L8 12.4 6.4 7.8 2 6.2l4.4-1.6L8 0Z"/></svg>
+      Trusted Services beyond borders
+    </span>
+
+    <h1 class="h1 hero__title" data-split>Next-Generation Security<br class="br-lg"> for Critical Infrastructure</h1>
+
+    <p class="lead hero__lead" data-reveal>
+      Appsline engineers the technological backbone of modern enterprises, from foundational
+      structured cabling to sophisticated IT infrastructure and cyber security frameworks —
+      delivered with full accountability.
+    </p>
+
+    <div class="hero__actions" data-reveal>
+      <a class="btn btn--accent" href="#contact">Get Support</a>
+      <a class="btn btn--bare" href="#contact">Talk to an expert</a>
+    </div>
+  </div>
+
+  <!-- ── Circuit board ─────────────────────────────────────── -->
+  <div class="circuit" id="circuit">
+    <svg class="circuit__svg" viewBox="0 0 1440 620" preserveAspectRatio="none" aria-hidden="true">
+      <!--
+        Coordinates are measured off the reference frame. Chip centre
+        (711,115), half-width 66 => left edge 645, right edge 777,
+        bottom 181. Tiles connect to three tap points per side at
+        y = 90 / 115 / 140. Corner radius is a uniform 16.
+      -->
+      <g class="circuit__traces">
+        <!-- left column → chip left edge -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M204 33 H384 Q400 33 400 49 V74 Q400 90 416 90 H645"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M109 153 H304 Q320 153 320 137 V131 Q320 115 336 115 H645"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M195 268 H484 Q500 268 500 252 V156 Q500 140 516 140 H645"/>
+        <!-- right column → chip right edge -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1204 26 H1056 Q1040 26 1040 42 V74 Q1040 90 1024 90 H777"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1320 151 H1136 Q1120 151 1120 135 V131 Q1120 115 1104 115 H777"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1250 278 H976 Q960 278 960 262 V156 Q960 140 944 140 H777"/>
+        <!--
+          Every trace below terminates at something: a tile pad, the chip,
+          or a frame edge. Nothing stops in mid-air.
+
+          The previous set had eight traces ending at arbitrary interior
+          points — (430,516), (1030,468), (600,536), (840,536), (470,612),
+          (970,612), (620,568), (820,568) — which is what made the board
+          read as scattered line fragments rather than one connected
+          system.
+        -->
+        <!-- chip underside: four legs straight down and out of frame,
+             as the reference's board does -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M683 191 V620"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M702 191 V620"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M721 191 V620"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M740 191 V620"/>
+        <!-- the two lower tiles drop straight out of frame -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M161 306 V620"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1284 316 V620"/>
+        <!-- edge to edge: in at the side, out at the bottom -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M0 400 H236 Q252 400 252 416 V620"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1440 400 H1204 Q1188 400 1188 416 V620"/>
+      </g>
+
+      <!-- Pulses are cloned from the traces above at runtime. -->
+      <g class="circuit__pulses" id="circuitPulses"></g>
+    </svg>
+
+    <!--
+      Vendor tiles. Percentages are the reference's tile centres mapped
+      onto the 1440x620 board: x from the frame directly, y as the
+      measured offset below the board's top edge divided by 620.
+    -->
+    <a class="circuit__tile" style="left:11.8%;top:5.3%"  href="#solutions" aria-label="Aruba"><span class="tile-txt">aruba</span></a>
+    <a class="circuit__tile" style="left:5.2%;top:24.7%"  href="#solutions" aria-label="Hewlett Packard Enterprise"><span class="tile-txt">hpe</span></a>
+    <a class="circuit__tile" style="left:11.2%;top:43.2%" href="#solutions" aria-label="Dell"><span class="tile-txt">dell</span></a>
+    <a class="circuit__tile" style="left:86%;top:4.2%"    href="#solutions" aria-label="Fortinet"><span class="tile-txt">ftnt</span></a>
+    <a class="circuit__tile" style="left:94%;top:24.4%"   href="#solutions" aria-label="Sophos"><span class="tile-txt">sophos</span></a>
+    <a class="circuit__tile" style="left:89.2%;top:44.8%" href="#solutions" aria-label="Hikvision"><span class="tile-txt">hik</span></a>
+
+    <!-- Central chip -->
+    <div class="circuit__chip">
+      <span class="circuit__legs circuit__legs--y circuit__legs--left"><i></i><i></i><i></i><i></i></span>
+      <span class="circuit__legs circuit__legs--y circuit__legs--right"><i></i><i></i><i></i><i></i></span>
+      <span class="circuit__legs circuit__legs--x circuit__legs--top"><i></i><i></i><i></i><i></i></span>
+      <span class="circuit__legs circuit__legs--x circuit__legs--bottom"><i></i><i></i><i></i><i></i></span>
+      <svg class="circuit__chip-mark" viewBox="0 0 141 87" aria-hidden="true">
+        <rect x="0"      y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+        <rect x="21.55"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.65)"/>
+        <rect x="43.1"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+        <rect x="64.65"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.65)"/>
+        <rect x="86.2"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+        <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.65)"/>
+        <rect x="129.3"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     ABOUT  (light)
+     ══════════════════════════════════════════════════════════ -->
+<section class="section section--light about" id="about">
+  <div class="container">
+
+    <div class="about__tabs" data-reveal>
+      <button class="tab is-active" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.2"/><path d="M8 7.2v4M8 4.9v.1"/></svg>
+        Who we are
+      </button>
+      <button class="tab" type="button">What we do</button>
+    </div>
+
+    <h2 class="h2 about__title" data-split>Architecting high-performance<br class="br-lg"> digital platforms</h2>
+
+    <div class="about__card" data-reveal>
+      <!-- Visual tile -->
+      <div class="about__visual sheen" data-embers>
+        <div class="beam" aria-hidden="true">
+          <span class="beam__shaft"></span>
+          <span class="beam__core"></span>
+        </div>
+        <div class="stars" data-stars="34" aria-hidden="true"></div>
+        <p class="about__visual-caption">Reliable IT solutions<br>that simplify life.</p>
+      </div>
+
+      <!-- Copy -->
+      <div class="about__body">
+        <p class="about__statement">
+          Appsline takes full accountability for the design, implementation and management
+          of high-end infrastructure.
+        </p>
+        <p class="about__note">
+          As an authorised regional leader we deliver scalable, secure and future-ready solutions
+          tailored to regional and global business demands — ensuring reliability, compliance and
+          long-term value across UAE, Oman and India.
+        </p>
+
+        <!-- Capability chips marquee -->
+        <div class="about__chips">
+          <div class="marquee" id="capabilityMarquee">
+            <div class="marquee__row"><div class="marquee__track" data-speed="34" data-dir="-1"></div></div>
+            <div class="marquee__row"><div class="marquee__track" data-speed="44" data-dir="1"></div></div>
+            <div class="marquee__row"><div class="marquee__track" data-speed="38" data-dir="-1"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     BENTO  (dark)  — Why Choose Appsline
+     ══════════════════════════════════════════════════════════ -->
+<section class="section bento" id="why">
+  <div class="wash wash--tr" aria-hidden="true"></div>
+
+  <div class="container container--wide">
+    <div class="section-head">
+      <span class="badge" data-reveal>Why Choose Appsline</span>
+      <h2 class="h2" data-split>Scalable, secure and future-ready solutions</h2>
+    </div>
+
+    <div class="bento__grid">
+
+      <!-- row 1 -->
+      <article class="bento__card bento__card--wide bento__card--tall" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <div class="art-globe" data-mini-globe></div>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">Regional presence, local accountability</h3>
+          <p class="bento__text">Delivery teams across <b>UAE, Oman and India</b> — one partner, on site, wherever your estate runs.</p>
+        </div>
+      </article>
+
+      <article class="bento__card bento__card--tall bento__card--copy-bottom" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <svg class="art-nodes" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
+            <path class="art-nodes__link" vector-effect="non-scaling-stroke" d="M150 100 L72 148M150 100 L228 148M150 130 L104 176M150 130 L196 176"/>
+          </svg>
+          <span class="art-streak" style="left:50%;top:6%;height:70px"></span>
+          <span class="art-streak" style="left:66%;top:52%;height:52px"></span>
+          <div class="art-nodes__hub">
+            <svg viewBox="0 0 141 87">
+              <rect x="0" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+              <rect x="21.55" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.6)"/>
+              <rect x="43.1" y="0" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+              <rect x="64.65" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.6)"/>
+              <rect x="86.2" y="0" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+              <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.6)"/>
+              <rect x="129.3" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+            </svg>
+          </div>
+          <span class="art-nodes__n" style="left:24%;top:49%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 14h6"/></svg></span>
+          <span class="art-nodes__n" style="left:76%;top:49%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg></span>
+          <span class="art-nodes__n" style="left:35%;top:59%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l5.5 3v4c0 3-2.4 5-5.5 5S2.5 12 2.5 9V5L8 2Z"/></svg></span>
+          <span class="art-nodes__n" style="left:65%;top:59%"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg></span>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">One accountable partner</h3>
+          <p class="bento__text">Design, implementation and management under a single point of ownership — no hand-offs between vendors.</p>
+        </div>
+      </article>
+
+      <!-- row 2 -->
+      <article class="bento__card" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <div class="art-disc">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5 20 5.2v6.1c0 5-3.4 8.6-8 11.2-4.6-2.6-8-6.2-8-11.2V5.2L12 1.5Z" opacity=".28"/><path d="M13.4 6.4 8.2 13.2h3l-.6 4.6 5.2-6.9h-3l.6-4.5Z"/></svg>
+          </div>
+          <span class="art-streak" style="left:42%;top:44%;height:44px;transform:rotate(78deg)"></span>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">Security-first approach</h3>
+          <p class="bento__text">Gateway firewalls, network segmentation and access control designed in from day one — not bolted on later.</p>
+        </div>
+      </article>
+
+      <article class="bento__card" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <div class="art-tiles">
+            <i></i><i></i><i></i><i></i>
+            <i></i><i class="is-lit"></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">Authorised OEM partnerships</h3>
+          <p class="bento__text">Aruba, HPE, Dell, Sophos, Fortinet, Molex, Commscope, Hikvision and Bosch — sourced and warranted properly.</p>
+        </div>
+      </article>
+
+      <article class="bento__card" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <div class="art-rows">
+            <div class="art-rows__row"><span class="art-rows__dot">24/7</span> Reliable support desk</div>
+            <div class="art-rows__row"><span class="art-rows__dot">AMC</span> Comprehensive C-AMC cover</div>
+          </div>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">Reliable support &amp; C-AMC</h3>
+          <p class="bento__text">One of the best all-round IT support operations in the UAE, structured to exceed customer expectations.</p>
+        </div>
+      </article>
+
+      <!-- row 3 -->
+      <article class="bento__card bento__card--wide" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <svg class="art-traces" viewBox="0 0 700 300" preserveAspectRatio="none">
+            <path vector-effect="non-scaling-stroke" d="M40 60 H300 Q320 60 320 80 V110 H700"/>
+            <path vector-effect="non-scaling-stroke" d="M40 110 H250 Q270 110 270 130 V150 H700"/>
+            <path class="is-lit" vector-effect="non-scaling-stroke" d="M40 160 H360 Q380 160 380 180 V190 H700"/>
+            <path vector-effect="non-scaling-stroke" d="M40 210 H200 Q220 210 220 230 V230 H700"/>
+            <path vector-effect="non-scaling-stroke" d="M40 260 H420 Q440 260 440 270 V270 H700"/>
+          </svg>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">Scalable by design</h3>
+          <p class="bento__text">High-quality structured cabling installations that support future growth — capacity you can add to without re-pulling the building.</p>
+        </div>
+      </article>
+
+      <article class="bento__card" data-reveal>
+        <div class="bento__art" aria-hidden="true">
+          <div class="art-badge">
+            <svg viewBox="0 0 141 87">
+              <rect x="0" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+              <rect x="21.55" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.7)"/>
+              <rect x="43.1" y="0" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+              <rect x="64.65" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.7)"/>
+              <rect x="86.2" y="0" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+              <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.7)"/>
+              <rect x="129.3" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+            </svg>
+          </div>
+          <div class="art-panel">
+            <div><span class="k">site</span> = Survey(building)</div>
+            <div><span class="k">plan</span> = Design(site, growth)</div>
+            <div>deploy(plan, oem="authorised")</div>
+            <div>handover(docs, warranty)</div>
+            <div>amc.monitor(sla="24/7")</div>
+          </div>
+        </div>
+        <div class="bento__head">
+          <h3 class="bento__title">End-to-end expertise</h3>
+          <p class="bento__text">Survey, design, deployment, documentation and ongoing management — one engineering team throughout.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     GLOBE  (dark, WebGL)
+     ══════════════════════════════════════════════════════════ -->
+<section class="globe" id="network">
+  <!--
+    Copy first, sphere below it. The copy clears the sphere's apex on the
+    way in (reference, 19.3s), then scrolls away while the stage holds the
+    whole sphere centre-frame (reference, 20.5-22.0s). The hold is the
+    stage's own `position: sticky` — see sections/_globe.scss.
+  -->
+  <div class="container globe__head section-head">
+    <span class="badge" data-reveal>Regional Presence</span>
+    <h2 class="h2" data-split>Trusted services beyond borders</h2>
+    <p class="lead" data-reveal>
+      A strong presence across the UAE, Oman and India lets us deliver scalable, secure and
+      future-ready infrastructure tailored to regional and global business demands.
+    </p>
+    <div class="globe__legend" data-reveal>
+      <span><i></i> Delivery countries <b>3</b></span>
+      <span class="is-planned"><i></i> Support coverage <b>24/7</b></span>
+    </div>
+  </div>
+
+  <div class="globe__stage" aria-hidden="true">
+    <div class="stars" data-stars="46"></div>
+    <div class="globe__halo"></div>
+    <div class="globe__canvas" id="globeCanvas"></div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PORTAL  (light)
+     ══════════════════════════════════════════════════════════ -->
+<section class="section section--light portal" id="portal">
+  <div class="container">
+
+    <div class="section-head portal__head">
+      <span class="badge" data-reveal>Customer Portal</span>
+      <h2 class="h2" data-split>Seamless service at your fingertips</h2>
+      <p class="lead" data-reveal>Raise a request, track an engineer and pull your service history — from any of our three regional portals.</p>
+    </div>
+
+    <div class="portal__logos" data-reveal>
+      <span class="portal__logo" title="Aruba"><span class="tile-txt tile-txt--ink">aruba</span></span>
+      <span class="portal__logo" title="HPE"><span class="tile-txt tile-txt--ink">hpe</span></span>
+      <span class="portal__logo" title="Dell"><span class="tile-txt tile-txt--ink">dell</span></span>
+      <span class="portal__logo" title="Sophos"><span class="tile-txt tile-txt--ink">sph</span></span>
+      <span class="portal__logo" title="Fortinet"><span class="tile-txt tile-txt--ink">ftnt</span></span>
+      <span class="portal__logo" title="Hikvision"><span class="tile-txt tile-txt--ink">hik</span></span>
+      <span class="portal__logo" title="Molex"><span class="tile-txt tile-txt--ink">mlx</span></span>
+      <span class="portal__logo" title="Commscope"><span class="tile-txt tile-txt--ink">cs</span></span>
+    </div>
+
+    <div class="portal__card" data-reveal>
+      <div class="portal__dome" aria-hidden="true"></div>
+
+      <div class="portal__brandmark" aria-hidden="true">
+        <svg viewBox="0 0 141 87">
+          <rect x="0" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+          <rect x="21.55" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.72)"/>
+          <rect x="43.1" y="0" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+          <rect x="64.65" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.72)"/>
+          <rect x="86.2" y="0" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+          <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.72)"/>
+          <rect x="129.3" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
+        </svg>
+      </div>
+
+      <p class="portal__card-title">Raise a service request</p>
+
+      <div class="portal__grid">
+        <button class="portal__row" type="button">
+          <span class="portal__row-icon" style="--row-bg:#eef4ee;--row-fg:#4a7a52">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8.5h5M5.5 11h3"/></svg>
+          </span>
+          <span>
+            <span class="portal__row-title">Log a ticket</span>
+            <span class="portal__row-sub">Network outage at the Al Qusais branch — priority high</span>
+          </span>
+        </button>
+
+        <button class="portal__row" type="button">
+          <span class="portal__row-icon" style="--row-bg:#fdf3e6;--row-fg:#b07a2e">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.8 13.5 5v6L8 14.2 2.5 11V5L8 1.8Z"/><path d="M8 8v6.2M2.5 5 8 8l5.5-3"/></svg>
+          </span>
+          <span>
+            <span class="portal__row-title">Request an AMC quote</span>
+            <span class="portal__row-sub">Comprehensive cover for 48 access points and 6 switches</span>
+          </span>
+        </button>
+
+        <button class="portal__row" type="button">
+          <span class="portal__row-icon" style="--row-bg:#eaf1fb;--row-fg:#3a6ba5">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="5.2" r="2.6"/><path d="M2.8 13.6c.5-2.7 2.6-4.2 5.2-4.2s4.7 1.5 5.2 4.2"/></svg>
+          </span>
+          <span>
+            <span class="portal__row-title">Track an engineer visit</span>
+            <span class="portal__row-sub">Site attendance scheduled for tomorrow, 09:00 GST</span>
+          </span>
+        </button>
+
+        <button class="portal__row" type="button">
+          <span class="portal__row-icon" style="--row-bg:#f7eefb;--row-fg:#8a4fa8">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M2.8 13.2h10.4"/></svg>
+          </span>
+          <span>
+            <span class="portal__row-title">Download reports</span>
+            <span class="portal__row-sub">Quarterly cabling certification and CCTV health summary</span>
+          </span>
+        </button>
+      </div>
+
+      <form class="portal__input" onsubmit="return false">
+        <label class="visually-hidden" for="portalInput">Describe your request</label>
+        <input id="portalInput" type="text" placeholder="Describe your request — we'll route it to the right engineer">
+        <button class="portal__send" type="submit" aria-label="Send request">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M4 7l4-4 4 4"/></svg>
+        </button>
+      </form>
+
+      <p class="portal__disclaimer">Portals available for UAE, Oman and India. Tickets are acknowledged by our regional support desk.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     INDUSTRIES  (light)
+     ══════════════════════════════════════════════════════════ -->
+<section class="section section--light industries" id="industries">
+  <div class="container container--wide">
+
+    <div class="section-head industries__head">
+      <span class="badge" data-reveal>Industries</span>
+      <h2 class="h2" data-split>A flexible solution for demanding environments</h2>
+    </div>
+
+    <div class="industries__grid">
+
+      <article class="industry" data-reveal>
+        <div class="industry__visual">
+          <span class="industry__pin" style="left:74%;top:34%"><svg viewBox="0 0 26 34" fill="currentColor"><path d="M13 0C5.8 0 0 5.8 0 13c0 9.8 13 21 13 21s13-11.2 13-21c0-7.2-5.8-13-13-13Zm0 17.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"/></svg></span>
+          <svg viewBox="0 0 320 200" fill="none" stroke="rgba(10,10,10,.14)" stroke-width="1.2">
+            <rect x="42" y="46" width="98" height="70" rx="6"/><rect x="56" y="62" width="70" height="6" rx="3"/><rect x="56" y="76" width="46" height="6" rx="3"/>
+            <rect x="176" y="60" width="98" height="86" rx="10"/><path d="M198 96h54M198 112h34"/>
+            <path d="M140 82h36"/>
+          </svg>
+        </div>
+        <h3 class="industry__title">Healthcare</h3>
+        <ul class="industry__list">
+          <li>Secure, standards-compliant clinical networks</li>
+          <li>Data security across patient-facing systems</li>
+          <li>Video surveillance and access control</li>
+          <li>Timely execution around live wards</li>
+        </ul>
+        <blockquote class="industry__quote">
+          <p>“Appsline helps you choose the most appropriate network solution for your establishment and integrate these systems into place seamlessly working on diverse platforms.”</p>
+          <footer><b>Dr. C Mohamed Ashraf</b>Chairman &amp; Medical Director, Craft Hospital and Research Centre</footer>
+        </blockquote>
+      </article>
+
+      <article class="industry" data-reveal>
+        <div class="industry__visual">
+          <span class="industry__pin" style="left:30%;top:28%"><svg viewBox="0 0 26 34" fill="currentColor"><path d="M13 0C5.8 0 0 5.8 0 13c0 9.8 13 21 13 21s13-11.2 13-21c0-7.2-5.8-13-13-13Zm0 17.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"/></svg></span>
+          <svg viewBox="0 0 320 200" fill="none" stroke="rgba(10,10,10,.14)" stroke-width="1.2">
+            <rect x="60" y="70" width="200" height="76" rx="8"/>
+            <path d="M60 96h200M110 96v50M160 96v50M210 96v50"/>
+            <circle cx="85" cy="83" r="4"/><circle cx="100" cy="83" r="4"/>
+          </svg>
+        </div>
+        <h3 class="industry__title">Hospitality &amp; Co-working</h3>
+        <ul class="industry__list">
+          <li>Guest and tenant Wi-Fi with clean segmentation</li>
+          <li>Unified communication and IP telephony</li>
+          <li>Public address for clear site-wide announcements</li>
+        </ul>
+        <blockquote class="industry__quote">
+          <p>“Appsline delivered a seamless IT and ELV infrastructure for our coworking space with exceptional professionalism. The solutions provided are reliable, secure, and perfectly aligned with our operational needs.”</p>
+          <footer><b>Mr. Niyas Muhammed</b>General Manager, Innerspace Coworking</footer>
+        </blockquote>
+      </article>
+
+      <article class="industry" data-reveal>
+        <div class="industry__visual">
+          <span class="industry__pin" style="left:62%;top:24%"><svg viewBox="0 0 26 34" fill="currentColor"><path d="M13 0C5.8 0 0 5.8 0 13c0 9.8 13 21 13 21s13-11.2 13-21c0-7.2-5.8-13-13-13Zm0 17.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"/></svg></span>
+          <svg viewBox="0 0 320 200" fill="none" stroke="rgba(10,10,10,.14)" stroke-width="1.2">
+            <path d="M70 78h180l-12 68H82L70 78Z"/><path d="M104 78a56 56 0 0 1 112 0"/>
+            <circle cx="118" cy="160" r="8"/><circle cx="202" cy="160" r="8"/>
+          </svg>
+        </div>
+        <h3 class="industry__title">Retail</h3>
+        <ul class="industry__list">
+          <li>Consistent connectivity across remote branches</li>
+          <li>Real-time coordination between stores</li>
+          <li>CCTV coverage for stock and shop floor</li>
+        </ul>
+        <blockquote class="industry__quote">
+          <p>“Appsline ensured consistent, high-performance connectivity across our remote branches, enabling smooth coordination and real-time operations without disruption.”</p>
+          <footer><b>Mr. Ashik</b>General Manager, Daymart Hypermarket Group</footer>
+        </blockquote>
+      </article>
+
+      <article class="industry" data-reveal>
+        <div class="industry__visual">
+          <span class="industry__pin" style="left:44%;top:30%"><svg viewBox="0 0 26 34" fill="currentColor"><path d="M13 0C5.8 0 0 5.8 0 13c0 9.8 13 21 13 21s13-11.2 13-21c0-7.2-5.8-13-13-13Zm0 17.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"/></svg></span>
+          <svg viewBox="0 0 320 200" fill="none" stroke="rgba(10,10,10,.14)" stroke-width="1.2">
+            <path d="M160 62 60 100l100 38 100-38-100-38Z"/><path d="M96 114v34c0 10 28 18 64 18s64-8 64-18v-34"/>
+          </svg>
+        </div>
+        <h3 class="industry__title">Education</h3>
+        <ul class="industry__list">
+          <li>Campus-wide structured cabling and Wi-Fi</li>
+          <li>Attendance and access control integration</li>
+          <li>Adherence to industry standards</li>
+        </ul>
+        <blockquote class="industry__quote">
+          <p>“Appsline delivered a secure and reliable IT infrastructure tailored to our healthcare environment. Their adherence to industry standards, focus on data security, and timely execution supported our clinical and administrative operations effectively.”</p>
+          <footer><b>Mr. Ajith Arjun</b>IT Manager, Travancore Medical College</footer>
+        </blockquote>
+      </article>
+
+      <article class="industry" data-reveal>
+        <div class="industry__visual">
+          <span class="industry__pin" style="left:68%;top:26%"><svg viewBox="0 0 26 34" fill="currentColor"><path d="M13 0C5.8 0 0 5.8 0 13c0 9.8 13 21 13 21s13-11.2 13-21c0-7.2-5.8-13-13-13Zm0 17.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"/></svg></span>
+          <svg viewBox="0 0 320 200" fill="none" stroke="rgba(10,10,10,.14)" stroke-width="1.2">
+            <rect x="66" y="56" width="60" height="96" rx="5"/><rect x="136" y="56" width="60" height="96" rx="5"/><rect x="206" y="56" width="48" height="96" rx="5"/>
+            <path d="M78 74h36M78 90h24M148 74h36M148 90h24M218 74h24"/>
+          </svg>
+        </div>
+        <h3 class="industry__title">Corporate &amp; IT</h3>
+        <ul class="industry__list">
+          <li>Server, storage and virtualisation platforms</li>
+          <li>Gateway firewall and network security</li>
+          <li>IP-PBX and collaboration tooling</li>
+          <li>IT support and comprehensive AMC</li>
+        </ul>
+      </article>
+
+      <article class="industry" data-reveal>
+        <div class="industry__visual">
+          <span class="industry__pin" style="left:36%;top:22%"><svg viewBox="0 0 26 34" fill="currentColor"><path d="M13 0C5.8 0 0 5.8 0 13c0 9.8 13 21 13 21s13-11.2 13-21c0-7.2-5.8-13-13-13Zm0 17.7a4.7 4.7 0 1 1 0-9.4 4.7 4.7 0 0 1 0 9.4Z"/></svg></span>
+          <svg viewBox="0 0 320 200" fill="none" stroke="rgba(10,10,10,.14)" stroke-width="1.2">
+            <path d="M64 148V86l44 26V86l44 26V86l44 26V86l44 26v36H64Z"/><path d="M96 128h16M140 128h16M184 128h16"/>
+          </svg>
+        </div>
+        <h3 class="industry__title">Manufacturing &amp; Industrial</h3>
+        <ul class="industry__list">
+          <li>Ruggedised cabling across plant floors</li>
+          <li>Public address for safety and coordination</li>
+          <li>Time attendance across shift patterns</li>
+          <li>Surveillance over assets and perimeters</li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     TIERS  (dark)
+     ══════════════════════════════════════════════════════════ -->
+<section class="section tiers" id="support">
+  <div class="container container--wide">
+
+    <div class="section-head">
+      <div class="segmented" id="tierToggle" data-reveal>
+        <span class="segmented__thumb"></span>
+        <button type="button" class="is-active" data-mode="amc">AMC</button>
+        <button type="button" data-mode="project">Project</button>
+      </div>
+      <h2 class="h2" data-split>Support plans that scale with your infrastructure</h2>
+    </div>
+
+    <div class="tiers__grid">
+
+      <article class="tier" data-reveal>
+        <p class="tier__label">Single site · business hours</p>
+        <div class="tier__headline">
+          <span class="tier__name">Essential</span>
+          <span class="tier__suffix">/ AMC</span>
+        </div>
+        <ul class="tier__specs">
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M5.6 8.2l1.7 1.7 3.1-3.4"/></svg> Preventive maintenance visits</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.2" y="3.4" width="11.6" height="9.2" rx="1.6"/><path d="M2.2 6.6h11.6"/></svg> Remote diagnostics and helpdesk</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2.2 13.4 5v5c0 2.7-2.2 4.4-5.4 5.6C4.8 14.4 2.6 12.7 2.6 10V5L8 2.2Z"/></svg> Firmware and security patching</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M8 4.6V8l2.4 1.5"/></svg> Business-hours response</li>
+        </ul>
+        <div class="tier__cta"><a class="btn btn--ghost" href="#contact">Request a quote</a></div>
+      </article>
+
+      <article class="tier tier--featured" data-reveal>
+        <p class="tier__label">Multi-site · extended cover</p>
+        <div class="tier__headline">
+          <span class="tier__name">Advanced</span>
+          <span class="tier__suffix">/ AMC</span>
+        </div>
+        <ul class="tier__specs">
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M5.6 8.2l1.7 1.7 3.1-3.4"/></svg> Everything in Essential</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.4 12.4V6.8l5.6-3.4 5.6 3.4v5.6"/><path d="M2.4 12.4h11.2"/></svg> On-site engineer attendance</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.4" y="2.4" width="4.6" height="4.6" rx="1"/><rect x="9" y="2.4" width="4.6" height="4.6" rx="1"/><rect x="2.4" y="9" width="4.6" height="4.6" rx="1"/><rect x="9" y="9" width="4.6" height="4.6" rx="1"/></svg> CCTV, access control and PA cover</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.6v3M8 11.4v3M1.6 8h3M11.4 8h3"/><circle cx="8" cy="8" r="2.6"/></svg> Quarterly performance reporting</li>
+        </ul>
+        <div class="tier__cta"><a class="btn btn--accent" href="#contact">Request a quote</a></div>
+      </article>
+
+      <article class="tier" data-reveal>
+        <p class="tier__label">Regional estate · 24/7</p>
+        <div class="tier__headline">
+          <span class="tier__name">Enterprise</span>
+          <span class="tier__suffix">/ AMC</span>
+        </div>
+        <ul class="tier__specs">
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M5.6 8.2l1.7 1.7 3.1-3.4"/></svg> Everything in Advanced</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M1.8 8h12.4M8 1.8c1.7 1.8 2.6 4 2.6 6.2S9.7 12.4 8 14.2C6.3 12.4 5.4 10.2 5.4 8S6.3 3.6 8 1.8Z"/></svg> Cover across UAE, Oman and India</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5.2" r="2.6"/><path d="M2.8 13.6c.5-2.7 2.6-4.2 5.2-4.2s4.7 1.5 5.2 4.2"/></svg> Named account engineer</li>
+          <li class="tier__spec"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13V3M3 3h7.4l-1.4 2.6L10.4 8.2H3"/></svg> Priority spares and escalation path</li>
+        </ul>
+        <div class="tier__cta"><a class="btn btn--ghost" href="#contact">Request a quote</a></div>
+      </article>
+
+    </div>
+
+    <p class="tiers__note">
+      Plans are scoped per site after survey. Talk to us about mixed estates spanning cabling, surveillance,
+      unified communication and access control.
+    </p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FAQ  (dark)
+     ══════════════════════════════════════════════════════════ -->
+<section class="section faq" id="faq">
+  <div class="container">
+    <h2 class="h2 faq__title" data-split>Frequently asked questions</h2>
+
+    <div class="faq__list" id="faqList">
+
+      <div class="faq__item is-open">
+        <button class="faq__q" type="button" aria-expanded="true">
+          <svg class="faq__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+          What does Appsline actually take responsibility for?
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">
+          We take full accountability for the design, implementation and management of high-end
+          infrastructure — from foundational structured cabling through to IT infrastructure and
+          cyber security frameworks. That means one engineering team from survey to handover to
+          ongoing AMC, rather than coordination between separate vendors.
+        </div></div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__q" type="button" aria-expanded="false">
+          <svg class="faq__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+          Which regions do you deliver and support in?
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">
+          We have a strong presence across the UAE, Oman and India, with our Dubai office in
+          Al Qusais and headquarters in Ernakulam, Kerala. Each region has its own customer
+          portal so tickets are routed to the local support desk.
+        </div></div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__q" type="button" aria-expanded="false">
+          <svg class="faq__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+          Do you work with authorised OEM equipment?
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">
+          Yes. We hold authorised partnerships with Aruba, Ubiquiti, HPE, Dell, Sophos, Fortinet,
+          Molex, Matrix, D-Link, Commscope, Hikvision, Bosch and Australian Monitor — so hardware
+          is sourced through proper channels and carries genuine manufacturer warranty.
+        </div></div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__q" type="button" aria-expanded="false">
+          <svg class="faq__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+          What is covered under a comprehensive AMC?
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">
+          A comprehensive AMC covers preventive maintenance, remote diagnostics, firmware and
+          security patching, and on-site engineer attendance. Scope is set per site after survey
+          and can span cabling, network, surveillance, access control, public address and
+          unified communication in a single agreement.
+        </div></div>
+      </div>
+
+      <div class="faq__item">
+        <button class="faq__q" type="button" aria-expanded="false">
+          <svg class="faq__caret" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+          Can you work in a live environment without downtime?
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">
+          It is most of what we do. Hospitals, campuses and hypermarkets cannot stop trading,
+          so work is phased, staged out of hours where needed, and documented as it goes.
+          Our customers consistently cite timely execution and clear communication around
+          live operations.
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     CTA  (dark, inset panel with the big bottom glow)
+     ══════════════════════════════════════════════════════════ -->
+<section class="cta-band" id="contact">
+  <div class="container container--wide">
+    <div class="cta">
+      <div class="edge-glow edge-glow--bottom" aria-hidden="true"></div>
+
+      <div class="cta__content">
+        <h2 class="h2 cta__title" data-split>Contact us to discuss your project</h2>
+        <p class="lead cta__lead" data-reveal>
+          Get in touch and we will walk you through the survey, design and delivery of your
+          infrastructure — and how we would support it once it is live.
+        </p>
+        <a class="btn btn--frost" href="mailto:info@appslineme.com" data-reveal>Talk to an expert</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PRODUCTS  (dark)
+     ══════════════════════════════════════════════════════════ -->
+<section class="section products" id="solutions">
+  <div class="container container--wide">
+    <h2 class="h2 products__title" data-split>Explore our solutions</h2>
+
+    <div class="products__grid">
+
+      <article class="product" data-reveal>
+        <span class="product__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 3v18M9 3v18M14 3v18M19 3v18"/></svg></span>
+        <h3 class="product__title">Structured Cabling</h3>
+        <p class="product__text">High-quality installations that ensure seamless connectivity and support future growth.</p>
+        <span class="product__link">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </article>
+
+      <article class="product" data-reveal>
+        <span class="product__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="18" height="6" rx="1.6"/><rect x="3" y="14" width="18" height="6" rx="1.6"/><path d="M7 7h.01M7 17h.01"/></svg></span>
+        <h3 class="product__title">IT Infrastructure</h3>
+        <p class="product__text">Robust infrastructure designed, deployed and managed for performance, security and long-term scalability.</p>
+        <span class="product__link">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </article>
+
+      <article class="product" data-reveal>
+        <span class="product__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 7.5 15 4v13L3 13.5z"/><circle cx="19" cy="10.5" r="2.4"/></svg></span>
+        <h3 class="product__title">Video Surveillance</h3>
+        <p class="product__text">High-definition monitoring, real-time visibility and secure system integration to protect people and assets.</p>
+        <span class="product__link">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </article>
+
+      <article class="product" data-reveal>
+        <span class="product__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4.5 5.5c0 8 6 14 14 14l2-3.4-4.2-2.2-2 2a14.6 14.6 0 0 1-6.2-6.2l2-2L7.9 3.5 4.5 5.5Z"/></svg></span>
+        <h3 class="product__title">IP-PBX &amp; Unified Communication</h3>
+        <p class="product__text">Voice, video, messaging and collaboration integrated to enhance productivity and business efficiency.</p>
+        <span class="product__link">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </article>
+
+      <article class="product" data-reveal>
+        <span class="product__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4Z"/><path d="M16.5 9a4.5 4.5 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11"/></svg></span>
+        <h3 class="product__title">Public Address System</h3>
+        <p class="product__text">Clear, instant and effective communication across commercial, industrial and public environments.</p>
+        <span class="product__link">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </article>
+
+      <article class="product" data-reveal>
+        <span class="product__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg></span>
+        <h3 class="product__title">Access Control &amp; Time Attendance</h3>
+        <p class="product__text">Enhanced security and accurate monitoring of entry, exit and employee attendance across your organisation.</p>
+        <span class="product__link">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+</main>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer__wash" aria-hidden="true"></div>
+  <div class="stars" data-stars="30" aria-hidden="true"></div>
+
+  <div class="container container--wide footer__inner">
+
+    <div class="footer__top">
+      <div>
+        <span class="footer__lockup">
+          <span class="lockup">
+            <svg class="lockup__mark" viewBox="0 0 141 87" aria-hidden="true">
+              <rect x="0" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+              <rect x="21.55" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+              <rect x="43.1" y="0" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+              <rect x="64.65" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+              <rect x="86.2" y="0" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+              <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+              <rect x="129.3" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+            </svg>
+            <img class="lockup__word" src="src/assets/logo/appsline-wordmark.png" alt="Appsline">
+          </span>
+        </span>
+
+        <p class="footer__blurb">
+          Accelerating connectivity, empowering people. Reliable IT solutions that simplify life —
+          engineered, delivered and supported end to end.
+        </p>
+
+        <div class="footer__social">
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.2 5.6h2.3V13H3.2V5.6ZM4.35 2.2a1.35 1.35 0 1 1 0 2.7 1.35 1.35 0 0 1 0-2.7ZM7.1 5.6h2.2v1h.03c.31-.58 1.06-1.2 2.18-1.2 2.33 0 2.76 1.5 2.76 3.45V13h-2.3V9.3c0-.88-.02-2.02-1.24-2.02-1.24 0-1.43.95-1.43 1.95V13H7.1V5.6Z"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M9.6 14V8.7h1.8l.27-2.06H9.6V5.3c0-.6.17-1 1.03-1h1.1V2.45c-.2-.03-.86-.09-1.63-.09-1.62 0-2.73.98-2.73 2.79v1.5H5.56V8.7H7.4V14h2.2Z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.6" y="2.6" width="10.8" height="10.8" rx="3.2"/><circle cx="8" cy="8" r="2.7"/><circle cx="11.3" cy="4.7" r=".7" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.4 5.1c-.15-.6-.6-1.05-1.2-1.2C12.1 3.6 8 3.6 8 3.6s-4.1 0-5.2.3c-.6.15-1.05.6-1.2 1.2C1.3 6.2 1.3 8 1.3 8s0 1.8.3 2.9c.15.6.6 1.05 1.2 1.2 1.1.3 5.2.3 5.2.3s4.1 0 5.2-.3c.6-.15 1.05-.6 1.2-1.2.3-1.1.3-2.9.3-2.9s0-1.8-.3-2.9ZM6.7 10.1V5.9L10.3 8l-3.6 2.1Z"/></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.8a6.16 6.16 0 0 0-5.3 9.3l-.85 3.1 3.18-.83A6.16 6.16 0 1 0 8 1.8Zm3.55 8.7c-.15.42-.88.8-1.22.83-.32.03-.62.15-2.1-.44-1.77-.7-2.88-2.5-2.97-2.62-.08-.12-.7-.93-.7-1.78s.44-1.26.6-1.43a.62.62 0 0 1 .45-.21h.32c.1 0 .24-.04.38.29.15.35.5 1.2.54 1.29.04.09.07.19.01.3-.24.48-.5.46-.37.68.5.85 1 1.15 1.75 1.53.13.06.2.05.28-.03.08-.09.32-.37.4-.5.09-.13.17-.11.29-.07.12.05.77.37.9.43.13.07.22.1.25.15.04.06.04.33-.11.75Z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#solutions">Structured Cabling</a></li>
+          <li><a href="#solutions">IT Infrastructure</a></li>
+          <li><a href="#solutions">Video Surveillance</a></li>
+          <li><a href="#solutions">IP-PBX &amp; UC</a></li>
+          <li><a href="#solutions">Public Address System</a></li>
+          <li><a href="#solutions">Access Control</a></li>
+          <li><a href="#solutions">IT Support &amp; C-AMC</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About us</a></li>
+          <li><a href="#industries">Project Gallery</a></li>
+          <li><a href="#why">Why Appsline</a></li>
+          <li><a href="#network">Regional presence</a></li>
+          <li><a href="#contact">Contact us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#solutions">Network &amp; Wi-Fi Solutions</a></li>
+          <li><a href="#solutions">Server &amp; Storage Solutions</a></li>
+          <li><a href="#solutions">Gateway Firewall &amp; Security</a></li>
+          <li><a href="#solutions">IT Support &amp; AMC</a></li>
+          <li><a href="#solutions">CCTV Systems</a></li>
+          <li><a href="#solutions">Time Attendance Systems</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4>Customer Portal</h4>
+        <ul>
+          <li><a href="#portal">Portal — UAE</a></li>
+          <li><a href="#portal">Portal — Oman</a></li>
+          <li><a href="#portal">Portal — India</a></li>
+          <li><a href="#portal">Digital Profile</a></li>
+        </ul>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:info@appslineme.com">info@appslineme.com</a></li>
+          <li><a href="tel:+918547613752">+91 85476 13752</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__mid">
+      <div class="footer__offices">
+        <span class="footer__office"><i></i> Dubai, UAE</span>
+        <span class="footer__office"><i></i> Oman</span>
+        <span class="footer__office"><i></i> Ernakulam, India</span>
+      </div>
+
+      <div class="footer__subscribe">
+        <p>Subscribe to discover the latest updates, news and features</p>
+        <form class="subscribe" onsubmit="return false">
+          <label class="visually-hidden" for="subEmail">Email address</label>
+          <input id="subEmail" type="email" placeholder="Enter your e-mail">
+          <button type="submit" aria-label="Subscribe">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__legal">
+        <b>Appsline IT Services</b> — 503, Al Fahad 4, Damascus Street, Al Qusais, Dubai, UAE.<br>
+        Copyright © 2026 Appsline. All Rights Reserved.
+      </div>
+      <div class="footer__contacts">
+        <b>Appsline Integrated Solutions Pvt Ltd</b><br>
+        66/947B, Amal Complex, C.P Ummer Rd, Ernakulam, Kerala-682035, India<br>
+        <a href="mailto:info@appsline.in">info@appsline.in</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<!--
+  Bundled as a classic script rather than type="module" on purpose:
+  ES modules are blocked by CORS on the file:// protocol, so a module
+  build leaves the page stuck behind the preloader when index.html is
+  opened by double-clicking it. This bundle works either way.
+  Rebuild with: npm run js
+-->
+<script src="src/js/bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+// ============================================================
+//  FOOTER  (dark)
+//  Reference: a faint star-field with a violet wash in the top
+//  right; brand block on the left, four link columns, then a
+//  divider, a subscribe row, and a legal strip.
+// ============================================================
+
+.footer {
+  position: relative;
+  background: var(--bg-dark);
+  padding-top: clamp(3.5rem, 7vw, 6rem);
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+  overflow: hidden;
+  border-top: 1px solid var(--line-dark-soft);
+}
+
+// Violet nebula wash bleeding in from the top right.
+.footer__wash {
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 62%;
+  height: 130%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      ellipse at 72% 26%,
+      rgba(118, 66, 148, 0.3),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse at 88% 12%,
+      rgba(var(--accent-rgb), 0.16),
+      transparent 58%
+    );
+}
+
+.footer__inner {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) repeat(4, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+// ---- Brand block ---------------------------------------------
+
+.footer__lockup {
+  height: 28px;
+  width: auto;
+}
+
+.footer__blurb {
+  margin-top: 1.35rem;
+  max-width: 34ch;
+  font-size: var(--fs-sm);
+  line-height: 1.62;
+  color: var(--ink-on-dark-2);
+}
+
+.footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.75rem;
+}
+
+.footer__social a {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--ink-on-dark-2);
+  transition: background var(--t-fast) var(--e-out),
+    color var(--t-fast) var(--e-out), transform var(--t-fast) var(--e-out);
+}
+
+.footer__social a:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.footer__social svg {
+  width: 15px;
+  height: 15px;
+}
+
+// ---- Link columns --------------------------------------------
+
+.footer__col h4 {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: var(--ink-on-dark);
+  margin-bottom: 1.1rem;
+}
+
+// A second heading always follows its predecessor's list, never the
+// heading itself.
+.footer__col ul + h4 {
+  margin-top: 1.75rem;
+}
+
+.footer__col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.footer__col a,
+.footer__col li {
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--ink-on-dark-2);
+}
+
+.footer__col a {
+  transition: color var(--t-fast) var(--e-out);
+}
+
+.footer__col a:hover {
+  color: #fff;
+}
+
+// ---- Subscribe row -------------------------------------------
+
+.footer__mid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: clamp(1.75rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--line-dark);
+}
+
+.footer__offices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer__office {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-dark);
+  font-size: var(--fs-xs);
+  color: var(--ink-on-dark-2);
+}
+
+.footer__office i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.footer__subscribe {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.footer__subscribe p {
+  max-width: 26ch;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-on-dark);
+}
+
+.subscribe {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: min(340px, 100%);
+  padding: 5px 5px 5px 1.15rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-dark);
+}
+
+.subscribe input {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+  font-size: var(--fs-sm);
+  color: #fff;
+}
+
+.subscribe input::placeholder {
+  color: var(--ink-on-dark-3);
+}
+
+.subscribe button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #0a0a0a;
+  transition: background var(--t-fast) var(--e-out),
+    transform var(--t-fast) var(--e-out);
+}
+
+.subscribe button:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.subscribe svg {
+  width: 14px;
+  height: 14px;
+}
+
+// ---- Legal ---------------------------------------------------
+
+.footer__bottom {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  border-top: 1px solid var(--line-dark);
+  font-size: var(--fs-xs);
+  line-height: 1.65;
+  color: var(--ink-on-dark-3);
+}
+
+.footer__bottom b {
+  color: var(--ink-on-dark-2);
+  font-weight: 500;
+}
+
+.footer__bottom a {
+  color: var(--ink-on-dark-2);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer__legal {
+  max-width: 62ch;
+}
+
+.footer__contacts {
+  text-align: right;
+}
+
+@media (max-width: 1100px) {
+  .footer__top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .footer__top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footer__contacts {
+    text-align: left;
+  }
+}

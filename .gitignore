@@ -1,0 +1,38 @@
+# Dependencies — restored with `npm install`
+node_modules/
+
+# Build inputs that are regenerated, never edited by hand.
+# src/css/main.css and src/js/bundle.js are deliberately NOT ignored:
+# index.html loads them directly, so committing them is what lets the site
+# deploy as a static host with no build step.
+
+# Screenshot harness output — regenerate with `npm run shot`
+shots/
+
+# Chrome's scratch profile from the screenshot harness. Large, machine-local,
+# and holds browser session state that has no business in a repo.
+.chrome-profile/
+
+# Generated analysis artefacts. The probe scripts and ANIMATION-MAP.md are
+# kept; the contact sheets they render are 16MB of regenerable PNGs.
+analysis/sheets/
+
+# The design reference. A screen recording of a third-party live site, kept
+# locally as a working measurement source (see README, "Measuring the
+# reference"). It is not ours to redistribute, so it stays out of a public
+# repo — every measurement taken from it is already written down in
+# analysis/ANIMATION-MAP.md and the token comments.
+website-reference.mp4
+
+# Vercel
+.vercel/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+npm-debug.log*
+.idea/
+.vscode/*
+!.vscode/extensions.json

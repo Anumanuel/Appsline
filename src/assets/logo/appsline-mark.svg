@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141 87" role="img" aria-label="Appsline">
+  <!--
+    Appsline mark, redrawn as vectors from the official logo.
+    Geometry measured off /assets/images/logo.png (264x181):
+    7 bars, uniform 11.7 x 74.5 with fully rounded ends (rx = w/2),
+    uniform 21.55 pitch, bars 3 and 5 raised by 12.2.
+    Colours sampled from the source file: #0095DA / #54C5D0.
+  -->
+  <g>
+    <rect x="0"      y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+    <rect x="21.55"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+    <rect x="43.1"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+    <rect x="64.65"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+    <rect x="86.2"   y="0"    width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+    <rect x="107.75" y="12.2" width="11.7" height="74.5" rx="5.85" fill="#54C5D0"/>
+    <rect x="129.3"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="#0095DA"/>
+  </g>
+</svg>

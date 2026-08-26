@@ -1,0 +1,233 @@
+// ============================================================
+//  PORTAL  (light)
+//  Reference "Experience it now": a warm off-white stage, a row
+//  of partner glyphs, then a big rounded product card — soft
+//  gradient dome, accent tile, title, a 2x2 grid of prompt rows
+//  and an input bar pinned to the bottom.
+// ============================================================
+
+.portal {
+  position: relative;
+  background: linear-gradient(180deg, #fdf6f1 0%, var(--bg-light) 42%);
+  color: var(--ink-on-light);
+  overflow: hidden;
+}
+
+.portal__head .h2 {
+  max-width: 16ch;
+}
+
+// ---- Partner glyph row ---------------------------------------
+
+.portal__logos {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 1.4vw, 1.1rem);
+  margin-top: 1.75rem;
+}
+
+.portal__logo {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(10, 10, 10, 0.06);
+  box-shadow: 0 6px 18px -10px rgba(10, 10, 10, 0.35);
+  transition: transform var(--t-fast) var(--e-out),
+    box-shadow var(--t-fast) var(--e-out);
+}
+
+.portal__logo:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px -12px rgba(10, 10, 10, 0.45);
+}
+
+.portal__logo img,
+.portal__logo svg {
+  width: 60%;
+  height: auto;
+}
+
+// ---- Product card --------------------------------------------
+
+.portal__card {
+  position: relative;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1.25rem, 3vw, 3rem)
+    clamp(1.25rem, 2vw, 2rem);
+  border-radius: var(--r-2xl);
+  background: #fff;
+  border: 1px solid rgba(10, 10, 10, 0.05);
+  box-shadow: 0 48px 120px -60px rgba(10, 10, 10, 0.45),
+    0 2px 8px -3px rgba(10, 10, 10, 0.05);
+  overflow: hidden;
+}
+
+// The pale dome behind the card title.
+.portal__dome {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  translate: -50% 0;
+  width: min(560px, 62%);
+  aspect-ratio: 2 / 1.35;
+  border-radius: 50% 50% 0 0 / 76% 76% 0 0;
+  background: linear-gradient(
+    180deg,
+    #dbeaf5 0%,
+    #eaf2f7 42%,
+    rgba(255, 255, 255, 0) 88%
+  );
+  pointer-events: none;
+}
+
+.portal__brandmark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-inline: auto;
+  border-radius: 14px;
+  background: linear-gradient(150deg, var(--accent-2), var(--accent));
+  box-shadow: 0 14px 34px -12px rgba(var(--accent-rgb), 0.75);
+}
+
+.portal__brandmark svg {
+  width: 56%;
+}
+
+.portal__card-title {
+  position: relative;
+  margin-top: 1.35rem;
+  text-align: center;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.026em;
+  color: var(--ink-on-light);
+}
+
+// ---- Prompt rows ---------------------------------------------
+
+.portal__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 2.5rem;
+  margin-top: clamp(3rem, 8vw, 6.5rem);
+}
+
+.portal__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.7rem 0.5rem;
+  border-radius: var(--r-sm);
+  text-align: left;
+  width: 100%;
+  transition: background var(--t-fast) var(--e-out);
+}
+
+.portal__row:hover {
+  background: rgba(10, 10, 10, 0.035);
+}
+
+.portal__row-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--row-bg, #eef4ee);
+  color: var(--row-fg, #4a7a52);
+}
+
+.portal__row-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+// Both are spans in the markup, so they need to be blocks to stack the
+// way the reference's rows do.
+.portal__row-title {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: var(--ink-on-light);
+}
+
+.portal__row-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--ink-on-light-3);
+}
+
+// ---- Input bar -----------------------------------------------
+
+.portal__input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding: 0.85rem 0.85rem 0.85rem 1.25rem;
+  border-radius: var(--r-md);
+  background: #fafafa;
+  border: 1px solid rgba(10, 10, 10, 0.08);
+}
+
+.portal__input input {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  color: var(--ink-on-light);
+  background: none;
+}
+
+.portal__input input::placeholder {
+  color: var(--ink-on-light-3);
+}
+
+.portal__send {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 10px;
+  background: #101010;
+  color: #fff;
+  transition: background var(--t-fast) var(--e-out),
+    transform var(--t-fast) var(--e-out);
+}
+
+.portal__send:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.portal__send svg {
+  width: 15px;
+  height: 15px;
+}
+
+.portal__disclaimer {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--ink-on-light-3);
+}
+
+@media (max-width: 768px) {
+  .portal__grid {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 3rem;
+  }
+}

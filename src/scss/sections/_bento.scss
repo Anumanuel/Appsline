@@ -1,0 +1,424 @@
+// ============================================================
+//  BENTO  (dark)
+//  Reference grid, three rows on a 3-column track:
+//    row 1  wide (2 col) + 1
+//    row 2  1 + 1 + 1
+//    row 3  wide (2 col) + 1
+//  Every card carries its own artwork bled to the card edge.
+// ============================================================
+
+.bento {
+  position: relative;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+.bento__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  margin-top: clamp(2.5rem, 5vw, 4.25rem);
+}
+
+.bento__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: clamp(1.35rem, 1.9vw, 1.85rem);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: linear-gradient(158deg, #121212 0%, #0c0c0c 100%);
+  border: 1px solid var(--line-dark);
+  isolation: isolate;
+  transition: border-color var(--t-mid) var(--e-out);
+}
+
+.bento__card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.bento__card--wide {
+  grid-column: span 2;
+}
+
+// Artwork sits behind the copy and bleeds to the card edge.
+.bento__art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bento__head {
+  position: relative;
+  z-index: 2;
+  max-width: 34ch;
+}
+
+// Scrim so card copy stays legible over its artwork, matching how the
+// reference keeps its bento titles readable above the illustrations.
+.bento__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.82) 0%,
+    rgba(10, 10, 10, 0.45) 26%,
+    transparent 52%
+  );
+  pointer-events: none;
+}
+
+.bento__card--copy-bottom .bento__art::after {
+  background: linear-gradient(
+    0deg,
+    rgba(10, 10, 10, 0.82) 0%,
+    rgba(10, 10, 10, 0.4) 30%,
+    transparent 58%
+  );
+}
+
+.bento__title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: var(--ls-h3);
+  color: var(--ink-on-dark);
+}
+
+.bento__text {
+  margin-top: 0.6rem;
+  font-size: var(--fs-sm);
+  line-height: 1.58;
+  color: var(--ink-on-dark-2);
+}
+
+.bento__text b {
+  color: #e8e8e8;
+  font-weight: 600;
+}
+
+// Cards whose copy sits at the bottom (reference: the tall
+// "single end-point" card puts its title under the artwork).
+.bento__card--copy-bottom .bento__head {
+  margin-top: auto;
+}
+
+.bento__card--tall {
+  min-height: 480px;
+}
+
+// ---- Shared art pieces ---------------------------------------
+
+// A dotted sphere rising out of the bottom of the card. The disc is the
+// CSS body; the dots are an orthographic SVG projection of the same land
+// mask the WebGL globe uses (see js/components/mini-globe.js).
+.art-globe {
+  position: absolute;
+  left: 50%;
+  // Anchored from the TOP, not the bottom, so the sphere always begins
+  // below the card's copy however tall the card gets. Anchoring it to the
+  // bottom made its top edge land at whatever height was left over, which
+  // on this card put the dots straight through the heading.
+  top: 46%;
+  bottom: auto;
+  translate: -50% 0;
+  // Sized so only the upper cap shows above the card's lower edge, as
+  // in the reference — large enough to read as a globe, small enough
+  // that the copy above it stays legible.
+  width: 74%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 34%,
+    #2a1240 0%,
+    #170b23 44%,
+    #0a0612 74%
+  );
+  box-shadow: 0 -26px 80px -26px rgba(var(--accent-rgb), 0.55),
+    inset 0 0 60px -10px rgba(var(--accent-rgb), 0.25);
+}
+
+.art-globe svg {
+  width: 100%;
+  height: 100%;
+  fill: #b9b9cc;
+}
+
+.art-globe__site {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.95));
+}
+
+// Grid of rounded tiles (OEM partner wall)
+.art-tiles {
+  position: absolute;
+  inset: auto 0 -12% 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding-inline: clamp(1.35rem, 1.9vw, 1.85rem);
+}
+
+.art-tiles i {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #1a1a1a, #101010);
+  border: 1px solid var(--line-dark-soft);
+}
+
+// The highlighted centre tile carries the accent
+.art-tiles i.is-lit {
+  background: linear-gradient(160deg, var(--accent-2), var(--accent));
+  border-color: transparent;
+  box-shadow: 0 10px 30px -10px rgba(var(--accent-rgb), 0.8);
+}
+
+// Node cluster around a central mark
+.art-nodes {
+  position: absolute;
+  inset: 0;
+}
+
+.art-nodes__hub {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 18px;
+  background: linear-gradient(155deg, #232323, #141414);
+  border: 1px solid var(--line-dark);
+}
+
+.art-nodes__hub svg {
+  width: 55%;
+}
+
+.art-nodes__n {
+  position: absolute;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-dark);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.art-nodes__n svg {
+  width: 15px;
+  height: 15px;
+}
+
+.art-nodes__link {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+
+// A vertical accent streak (reference uses these as "data flowing in")
+.art-streak {
+  position: absolute;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--accent),
+    transparent
+  );
+  filter: blur(0.5px);
+  box-shadow: 0 0 12px 2px rgba(var(--accent-rgb), 0.65);
+}
+
+// Horizontal circuit traces (autoscaling card)
+.art-traces {
+  position: absolute;
+  inset: 0;
+}
+
+.art-traces path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+}
+
+.art-traces .is-lit {
+  stroke: var(--accent);
+  stroke-width: 1.75;
+  filter: drop-shadow(0 0 5px rgba(var(--accent-rgb), 0.9));
+}
+
+// Shield / lock glyph on a soft disc (security card)
+.art-disc {
+  position: absolute;
+  left: 56%;
+  top: 62%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 52%,
+    transparent 70%
+  );
+}
+
+.art-disc svg {
+  width: 26%;
+  color: rgba(255, 255, 255, 0.55);
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.9));
+}
+
+// Stacked list rows (support / SLA card)
+.art-rows {
+  position: absolute;
+  left: clamp(1.35rem, 1.9vw, 1.85rem);
+  right: -18%;
+  bottom: 12%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.art-rows__row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line-dark);
+  font-size: var(--fs-xs);
+  color: var(--ink-on-dark-2);
+  white-space: nowrap;
+}
+
+.art-rows__row:nth-child(2) {
+  margin-left: 2.25rem;
+}
+
+.art-rows__dot {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(150deg, var(--accent-2), var(--accent));
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+// Big OEM logo tile + spec panel (hardware card)
+.art-badge {
+  position: absolute;
+  left: clamp(1.35rem, 1.9vw, 1.85rem);
+  bottom: clamp(1.35rem, 1.9vw, 1.85rem);
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  background: linear-gradient(150deg, var(--accent-2), var(--accent));
+  box-shadow: 0 18px 44px -14px rgba(var(--accent-rgb), 0.85);
+}
+
+.art-badge svg,
+.art-badge img {
+  width: 62%;
+}
+
+.art-panel {
+  position: absolute;
+  right: -14%;
+  bottom: 14%;
+  width: 62%;
+  padding: 0.9rem 1rem;
+  border-radius: var(--r-md);
+  background: rgba(20, 16, 24, 0.75);
+  border: 1px solid var(--line-dark);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.art-panel .k {
+  color: var(--accent);
+}
+
+// ---- Responsive ----------------------------------------------
+
+@media (max-width: 992px) {
+  .bento__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bento__card--wide {
+    grid-column: span 2;
+  }
+
+  .bento__card--tall {
+    min-height: 340px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bento__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bento__card--wide {
+    grid-column: span 1;
+  }
+
+  .bento__card {
+    min-height: 260px;
+  }
+}
+
+
+// ---- Travelling light on the trace card ----------------------
+// Two strokes rather than one plus an SVG filter: a wide faint halo under
+// a bright thin core reads the same as a Gaussian glow but costs ordinary
+// stroke rasterisation, where an feGaussianBlur would be re-evaluated on
+// every frame. Same approach as the hero board, so the two read as one
+// system. Geometry is written from JS (animations/bento.js).
+.art-traces__pulse {
+  fill: none;
+  stroke: var(--accent-hot);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.art-traces__pulse--halo {
+  stroke: rgba(var(--accent-rgb), 0.5);
+  stroke-width: 7;
+}
+
+// The artwork and copy layers are moved independently by the pointer, so
+// give the compositor notice. Transform and opacity only — nothing here
+// triggers layout.
+.bento__art,
+.bento__head {
+  will-change: transform;
+}

@@ -1,0 +1,411 @@
+// ============================================================
+//  NAVIGATION
+//  Two states, exactly as the reference:
+//   1. at rest  – full-bleed transparent bar under an announcement strip
+//   2. scrolled – a centred floating dark pill (logo tile + links +
+//                 white CTA), announcement strip gone
+//  The morph itself is driven by GSAP in js/components/nav.js;
+//  this file owns the two end states.
+// ============================================================
+
+// Sticky, not relative: in the reference the strip is still sitting at the
+// top of the viewport at 7.5s, long after a strip in normal flow would
+// have scrolled away, and it leaves at the same moment the bar collapses
+// into the pill. Sticky keeps its flow position, so nothing below moves.
+.announce {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  height: var(--announce-h);
+  transition: transform 0.24s var(--e-out), opacity 0.24s var(--e-out);
+  display: flex;
+  align-items: center;
+  background: #0d0d0d;
+  border-bottom: 1px solid var(--line-dark-soft);
+  font-size: var(--fs-xs);
+  color: var(--ink-on-dark-2);
+}
+
+.announce__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.announce__msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #d6d6d6;
+  transition: color var(--t-fast) var(--e-out);
+}
+
+.announce__msg:hover {
+  color: #fff;
+}
+
+.announce__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+}
+
+.announce__arrow {
+  width: 13px;
+  height: 13px;
+  transition: transform var(--t-fast) var(--e-out);
+}
+
+.announce__msg:hover .announce__arrow {
+  transform: translateX(3px);
+}
+
+.announce__side {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.announce__side a {
+  transition: color var(--t-fast) var(--e-out);
+}
+
+.announce__side a:hover {
+  color: #fff;
+}
+
+.announce__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+@media (max-width: 992px) {
+  .announce__side {
+    display: none;
+  }
+}
+
+// ------------------------------------------------------------
+//  Header shell
+// ------------------------------------------------------------
+
+.nav {
+  position: fixed;
+  top: var(--announce-h);
+  left: 0;
+  width: 100%;
+  z-index: var(--z-nav);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  transition: top 0.24s var(--e-out);
+}
+
+// The strip lifts away as the pill forms, not on the first few pixels of
+// scroll — they are one moment in the reference, at 8.0-8.1s.
+html.is-nav-pill .announce {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav__inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.4vw, 1.35rem);
+  width: 100%;
+  max-width: var(--container-wide);
+  height: var(--nav-h);
+  padding-inline: var(--gutter);
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  // The reference's morph is quick — it is a full bar at 7.97s and a
+  // finished pill by 8.09s, about three frames. 0.55s was four times too
+  // slow and read as a separate, laboured animation.
+  transition: max-width 0.24s var(--e-out), height 0.24s var(--e-out),
+    padding 0.24s var(--e-out), background 0.2s var(--e-out),
+    border-color 0.2s var(--e-out), border-radius 0.24s var(--e-out),
+    box-shadow 0.2s var(--e-out);
+}
+
+// ---- scrolled: collapse to a centred pill --------------------
+.nav.is-pill {
+  top: 14px;
+}
+
+.nav.is-pill .nav__inner {
+  max-width: max-content;
+  height: var(--nav-pill-h);
+  padding-inline: 5px;
+  padding-right: 5px;
+  border-radius: var(--r-pill);
+  background: rgba(16, 16, 16, 0.88);
+  border-color: var(--line-dark);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.9);
+}
+
+// ---- Brand ---------------------------------------------------
+
+.nav__brand {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 0.6rem;
+  margin-right: auto;
+  transition: margin var(--t-mid) var(--e-out);
+}
+
+.nav.is-pill .nav__brand {
+  margin-right: 0.35rem;
+}
+
+// Full lockup (mark + wordmark) — visible at rest.
+.nav__lockup {
+  height: 26px;
+  width: auto;
+  transition: opacity 0.32s var(--e-out), width 0.5s var(--e-out);
+}
+
+// Compact circular mark — visible in the pill state.
+.nav__mark {
+  display: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--accent-2), var(--accent));
+}
+
+.nav__mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.nav.is-pill .nav__lockup {
+  display: none;
+}
+
+.nav.is-pill .nav__mark {
+  display: grid;
+}
+
+// ---- Links ---------------------------------------------------
+
+.nav__menu {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.15rem, 0.9vw, 0.5rem);
+}
+
+.nav__item {
+  position: relative;
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  height: 38px;
+  padding-inline: 0.7rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  letter-spacing: -0.004em;
+  color: #e4e4e4;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--e-out),
+    background var(--t-fast) var(--e-out);
+}
+
+.nav__link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.nav__caret {
+  width: 11px;
+  height: 11px;
+  opacity: 0.7;
+  transition: transform var(--t-fast) var(--e-out);
+}
+
+.nav__item:hover .nav__caret {
+  transform: rotate(180deg);
+}
+
+// ---- Dropdown ------------------------------------------------
+
+.nav__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  translate: -50% 0;
+  min-width: 250px;
+  padding: 0.5rem;
+  border-radius: var(--r-md);
+  background: rgba(18, 18, 18, 0.97);
+  border: 1px solid var(--line-dark);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.24s var(--e-out), transform 0.24s var(--e-out),
+    visibility 0.24s;
+}
+
+.nav__item:hover .nav__panel,
+.nav__item:focus-within .nav__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav__panel a {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--r-xs);
+  font-size: var(--fs-sm);
+  color: var(--ink-on-dark-2);
+  transition: background var(--t-fast) var(--e-out),
+    color var(--t-fast) var(--e-out);
+}
+
+.nav__panel a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+// ---- Actions -------------------------------------------------
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  margin-left: auto;
+}
+
+.nav.is-pill .nav__actions {
+  margin-left: 0.35rem;
+}
+
+.nav__actions .btn {
+  --btn-h: 40px;
+  font-size: var(--fs-xs);
+  padding-inline: 1.15rem;
+}
+
+// At rest the CTA carries the brand colour; in the pill it turns
+// white, exactly as the reference does.
+.nav.is-pill .nav__cta {
+  background: #fff;
+  color: #0a0a0a;
+  box-shadow: none;
+}
+
+.nav.is-pill .nav__cta:hover {
+  background: #e6e6e6;
+}
+
+.nav.is-pill .nav__ghost {
+  display: none;
+}
+
+// ---- Mobile --------------------------------------------------
+
+.nav__burger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.nav__burger span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s var(--e-out), opacity 0.2s var(--e-out);
+}
+
+.nav__burger span + span {
+  margin-top: 4px;
+}
+
+.nav.is-open .nav__burger span:nth-child(1) {
+  transform: translateY(5.5px) rotate(45deg);
+}
+.nav.is-open .nav__burger span:nth-child(2) {
+  opacity: 0;
+}
+.nav.is-open .nav__burger span:nth-child(3) {
+  transform: translateY(-5.5px) rotate(-45deg);
+}
+
+@media (max-width: 1100px) {
+  .nav__menu,
+  .nav__ghost {
+    display: none;
+  }
+
+  .nav__burger {
+    display: grid;
+  }
+
+  .nav.is-pill .nav__inner {
+    padding-inline: 5px;
+  }
+}
+
+// Full-screen mobile sheet
+.nav-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) - 1);
+  padding: calc(var(--nav-h) + 40px) var(--gutter) 2rem;
+  background: rgba(8, 8, 8, 0.98);
+  backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s var(--e-out), visibility 0.35s;
+}
+
+.nav-sheet.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav-sheet a {
+  padding: 1rem 0;
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid var(--line-dark-soft);
+}
+
+.nav-sheet .btn {
+  margin-top: 1.5rem;
+  align-self: flex-start;
+}

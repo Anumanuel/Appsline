@@ -1,0 +1,257 @@
+// ============================================================
+//  HERO
+//  Full-viewport dark stage: faint grid, diagonal beam from the
+//  top-right, centred badge / H1 / lead / two CTAs, and the
+//  circuit board occupying the lower third and running past the
+//  fold — measured off the reference at 67% viewport height for
+//  the central chip.
+// ============================================================
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  // The announcement strip is in normal flow, so only the fixed nav has
+  // to be cleared here. The reference leaves ~150px between nav and badge,
+  // but its headline is one line where Appsline's is two — that extra line
+  // is split between this gap and the board sitting slightly lower.
+  padding-top: calc(var(--nav-h) + clamp(1.5rem, 11.5vh, 7rem));
+  padding-bottom: 0;
+  overflow: hidden;
+  background: var(--bg-dark);
+  isolation: isolate;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: var(--z-content);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+// Line breaks are forced in the markup, so no max-width is needed —
+// and a width constraint here would fight the <br>.
+.hero__title {
+  color: #fff;
+  text-wrap: balance;
+}
+
+// Reference lead: three lines on a ~542px measure.
+.hero__lead {
+  max-width: 545px;
+}
+
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+// ============================================================
+//  CIRCUIT BOARD
+//  Traces are SVG (deterministic orthogonal paths with rounded
+//  corners); the chip and the vendor tiles are DOM so they can
+//  carry real logos and hover states. Positions are percentages
+//  taken straight off the reference frame.
+// ============================================================
+
+.circuit {
+  position: relative;
+  z-index: var(--z-content);
+  width: 100%;
+  margin-top: clamp(0.5rem, 2vh, 1.5rem);
+  // 1 viewBox unit == 1 CSS px at 1440 wide, which keeps the measured
+  // trace coordinates meaningful. The board is taller than the space
+  // left in the hero, so it bleeds past the fold as the reference does.
+  aspect-ratio: 1440 / 620;
+  min-height: 320px;
+}
+
+.circuit__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+// Static trace
+.circuit__trace {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.17);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+
+// The travelling pulse: a bright core over a wide faint halo. Two
+// strokes instead of a Gaussian filter — see js/animations/circuit.js.
+.circuit__pulse {
+  fill: none;
+  stroke: var(--accent-hot);
+  stroke-width: 2.25;
+  stroke-linecap: round;
+}
+
+.circuit__pulse--halo {
+  stroke: var(--accent);
+  stroke-width: 9;
+  stroke-linecap: round;
+  opacity: 0.3;
+}
+
+// Solder pad where a trace meets a tile
+.circuit__pad {
+  fill: rgba(255, 255, 255, 0.22);
+}
+
+// ---- Tiles ---------------------------------------------------
+
+.circuit__tile {
+  position: absolute;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  // Reference tile measures 78px @1440.
+  width: clamp(50px, 5.4vw, 78px);
+  aspect-ratio: 1;
+  border-radius: clamp(14px, 1.6vw, 22px);
+  background: linear-gradient(160deg, #1e1e1e, #131313);
+  border: 1px solid var(--line-dark);
+  box-shadow: 0 14px 34px -16px rgba(0, 0, 0, 0.9);
+  transition: transform var(--t-mid) var(--e-out),
+    border-color var(--t-mid) var(--e-out), box-shadow var(--t-mid) var(--e-out);
+}
+
+.circuit__tile:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow: 0 18px 44px -14px rgba(var(--accent-rgb), 0.5);
+}
+
+.circuit__tile img,
+.circuit__tile svg {
+  width: 56%;
+  height: auto;
+  object-fit: contain;
+}
+
+// ---- Central chip --------------------------------------------
+
+// Chip centre measured at 115px below the board's top edge (viewBox y=115).
+.circuit__chip {
+  position: absolute;
+  left: 49.4%;
+  top: 18.5%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  // Reference chip measures 121px @1440.
+  width: clamp(92px, 8.4vw, 121px);
+  aspect-ratio: 1;
+  border-radius: clamp(20px, 2vw, 28px);
+  background: linear-gradient(155deg, #232323, #141414);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 26px 60px -20px rgba(0, 0, 0, 1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.circuit__chip-mark {
+  width: 54%;
+  height: auto;
+}
+
+// Chip legs — four rows of small rounded bars, one per edge.
+.circuit__legs {
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.circuit__legs i {
+  display: block;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 2px;
+}
+
+.circuit__legs--y i {
+  width: 10px;
+  height: 3px;
+}
+
+.circuit__legs--x i {
+  width: 3px;
+  height: 10px;
+}
+
+.circuit__legs--left {
+  right: 100%;
+  top: 50%;
+  translate: 0 -50%;
+  flex-direction: column;
+}
+
+.circuit__legs--right {
+  left: 100%;
+  top: 50%;
+  translate: 0 -50%;
+  flex-direction: column;
+}
+
+.circuit__legs--top {
+  bottom: 100%;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.circuit__legs--bottom {
+  top: 100%;
+  left: 50%;
+  translate: -50% 0;
+}
+
+// Soft halo under the chip
+.circuit__chip::after {
+  content: "";
+  position: absolute;
+  inset: -70%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 62%
+  );
+  filter: blur(26px);
+  z-index: -1;
+}
+
+// ---- Responsive ----------------------------------------------
+
+@media (max-width: 992px) {
+  .circuit {
+    aspect-ratio: 900 / 640;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    padding-bottom: 3rem;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+
+  .circuit {
+    aspect-ratio: 700 / 700;
+  }
+}

@@ -1,0 +1,363 @@
+// ============================================================
+//  RESET + BASE
+// ============================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  // Lenis drives scrolling; native smooth would fight it.
+  scroll-behavior: auto;
+}
+
+// ---- Lenis ---------------------------------------------------------
+// Lenis ships a stylesheet its docs treat as required, and this page was
+// never loading it. Without it the html/body height is whatever the UA
+// resolves rather than the content height, `scroll-behavior` from a UA or
+// user stylesheet can still fight the interpolation, and a stopped Lenis
+// (the preloader stops it) does not actually block the native scroll —
+// which is the stutter you feel on the first wheel of the page.
+// Inlined here rather than added as a second <link> so the page keeps to
+// one stylesheet request.
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-dark);
+  color: var(--ink-on-dark);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  // `clip`, not `hidden`. `overflow-x: hidden` forces overflow-y to
+  // compute as `auto`, which turns the body into a scroll container and
+  // silently breaks `position: sticky` on the sections — the whole
+  // stacking transition would just not happen. `clip` trims the same
+  // horizontal bleed without creating a scroll container.
+  overflow-x: clip;
+}
+
+// Locked while the preloader runs.
+body.is-loading {
+  overflow: clip;
+  height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: rgba(var(--accent-rgb), 0.85);
+  color: #fff;
+}
+
+// ============================================================
+//  Layout primitives
+// ============================================================
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+// ---- Section rhythm ------------------------------------------------
+// Every section carries a full-viewport floor and centres whatever it
+// holds in the space left over. Sections with more content than that
+// simply grow past it — the floor exists so a short section (faq,
+// products, the contact band) cannot read as a cramped strip wedged
+// between two tall neighbours.
+//
+// `svh` rather than `vh`: on mobile `vh` is the *largest* viewport, so a
+// 100vh section is always taller than the screen while the browser chrome
+// is showing, and every section starts a little scrolled.
+//
+// There is deliberately no sticky or stacking behaviour on sections. An
+// earlier pass pinned each one across a colour change and let the next
+// ride up over it — it fought the smooth scroll, cost the globe its full
+// frame, and displaced sections that fell back to `relative` outside
+// their range. The page is plain document flow again; the only thing that
+// holds still is the globe's own stage, which is what the reference does.
+.section {
+  position: relative;
+  padding-block: var(--section-py);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.footer {
+  position: relative;
+  z-index: 2;
+}
+
+.section--dark {
+  background: var(--bg-dark);
+  color: var(--ink-on-dark);
+}
+
+.section--light {
+  background: var(--bg-light);
+  color: var(--ink-on-light);
+}
+
+// ============================================================
+//  Type utilities
+// ============================================================
+
+.h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-h1);
+  font-weight: var(--hw-dark);
+}
+
+.h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-h2);
+  font-weight: var(--hw-dark-strong);
+}
+
+.section--light .h2 {
+  font-weight: var(--hw-light);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: var(--ink-on-dark-2);
+}
+
+.section--light .lead {
+  color: var(--ink-on-light-2);
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+// The reference sets every section heading on two lines, never one long
+// one — the measure is what forces the break.
+.section-head .h2 {
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+.section-head .lead {
+  max-width: 46ch;
+}
+
+// ============================================================
+//  Badge — the small pill that sits above every section heading
+//  ("Beta release", "What is?", "Advantages"…)
+// ============================================================
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 30px;
+  padding-inline: 0.85rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-badge);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-dark);
+  color: var(--ink-on-dark);
+  backdrop-filter: blur(10px);
+}
+
+.badge__spark {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  color: var(--accent);
+}
+
+.section--light .badge {
+  background: #101010;
+  border-color: transparent;
+  color: #fff;
+}
+
+// ============================================================
+//  Buttons
+// ============================================================
+
+.btn {
+  --btn-h: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: var(--btn-h);
+  padding-inline: 1.5rem;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  transition: background var(--t-fast) var(--e-out),
+    color var(--t-fast) var(--e-out), border-color var(--t-fast) var(--e-out),
+    transform var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 6px 26px -8px rgba(var(--accent-rgb), 0.75);
+}
+
+.btn--accent:hover {
+  background: var(--accent-deep);
+  box-shadow: 0 10px 32px -8px rgba(var(--accent-rgb), 0.95);
+}
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line-dark);
+  color: var(--ink-on-dark);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn--light {
+  background: #fff;
+  color: #0a0a0a;
+}
+
+.btn--light:hover {
+  background: #e9e9e9;
+}
+
+.btn--bare {
+  padding-inline: 1.1rem;
+  color: var(--ink-on-dark);
+}
+
+.btn--bare:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+// ============================================================
+//  Accessibility
+// ============================================================
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

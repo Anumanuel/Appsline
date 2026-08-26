@@ -1,0 +1,167 @@
+// ============================================================
+//  GLOBE  (dark, WebGL)
+//  Reference: a dotted sphere with a deep violet body and a large
+//  glowing atmosphere. Stepping the reference from 17.5s to 22.5s, the
+//  section plays in two beats:
+//
+//    17.5-20.0s  the copy sits above the sphere's apex, the sphere
+//                rising into the lower half of the frame
+//    20.5-22.0s  the copy has scrolled away and the WHOLE sphere sits
+//                centred in the viewport, holding still while the page
+//                keeps scrolling — its dots are pixel-identical frame to
+//                frame until the white panel covers it
+//
+//  That second beat is the stage holding sticky. Removing it (an earlier
+//  pass did, on the reading that the reference "does not hold the globe")
+//  is what left the sphere permanently half-cut: with the stage in normal
+//  flow the section is barely taller than the canvas, so the sphere is
+//  always sliding past the fold and never gets a frame of its own.
+// ============================================================
+
+.globe {
+  position: relative;
+  // The WebGL framing puts the sphere at ~60% of the canvas height, the
+  // rest being glow spill — so the canvas is deliberately larger than the
+  // sphere you see. Sized against the VIEWPORT, not a fixed pixel value,
+  // so the whole sphere fits the frame at any window size: 128svh of
+  // canvas puts the sphere at ~77svh with room above and below.
+  --globe-size: min(128svh, 104vw, 1180px);
+  // Two viewports, matching the reference — one to bring the copy through
+  // and one for the sphere to hold. Everything past the stage is the
+  // sticky hold.
+  min-height: 215svh;
+  padding-block: var(--section-py) 0;
+  background: var(--bg-dark);
+  // `clip`, not `hidden`: `hidden` makes this a scroll container, which
+  // would kill the stage's sticky positioning outright.
+  overflow: clip;
+}
+
+// ---- Sphere stage --------------------------------------------
+
+.globe__stage {
+  // Holds the sphere centre-frame while the rest of the section scrolls
+  // under it, then releases at the section's bottom edge so the next
+  // section arrives over a globe that is already on its way out.
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  width: 100%;
+  z-index: var(--z-webgl);
+  pointer-events: none;
+}
+
+// Centred in the stage — which is a viewport tall — so the entire sphere
+// is in frame with its glow spilling past the edges.
+.globe__canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: var(--globe-size);
+  height: var(--globe-size);
+}
+
+.globe__canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+// CSS underlay so the section still reads if WebGL is unavailable.
+.globe__halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: var(--globe-size);
+  height: var(--globe-size);
+  border-radius: 50%;
+  // A broad, soft wash rather than a defined ring — the WebGL rim
+  // supplies the bright limb, this only spreads it into the background.
+  // Every stop eases toward zero so the gradient has no visible edge.
+  background: radial-gradient(
+    circle,
+    transparent 27%,
+    rgba(var(--accent-rgb), 0.34) 32%,
+    rgba(var(--accent-2-rgb), 0.2) 37%,
+    rgba(var(--accent-rgb), 0.1) 43%,
+    rgba(var(--accent-rgb), 0.04) 50%,
+    rgba(var(--accent-rgb), 0.012) 58%,
+    transparent 68%
+  );
+  filter: blur(24px);
+}
+
+// ---- Copy above the sphere -----------------------------------
+
+// The stage is a positioned, z-indexed sibling that follows this in the
+// source, so the copy needs its own layer to stay on top of the sphere
+// during the overlap as the stage comes up to meet it.
+.globe__head {
+  position: relative;
+  z-index: var(--z-content);
+  text-align: center;
+}
+
+.globe__head .h2 {
+  max-width: 18ch;
+}
+
+.globe__head .lead {
+  max-width: 44ch;
+}
+
+.globe__legend {
+  margin-top: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  font-size: var(--fs-xs);
+  color: var(--ink-on-dark-2);
+}
+
+.globe__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.globe__legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px 1px rgba(var(--accent-rgb), 0.9);
+}
+
+.globe__legend .is-planned i {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+}
+
+.globe__legend b {
+  color: #fff;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+@media (max-width: 768px) {
+  .globe {
+    // On a narrow, tall screen the width is the binding constraint, so the
+    // sphere is allowed to run wider than the frame rather than shrinking
+    // to a dot in the middle of it.
+    --globe-size: min(150vw, 110svh);
+    // The copy stacks taller here, so the hold gets proportionally less
+    // room than it does on desktop.
+    min-height: 200svh;
+  }
+
+  .globe__legend {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}

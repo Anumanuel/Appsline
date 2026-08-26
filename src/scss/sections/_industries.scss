@@ -1,0 +1,128 @@
+// ============================================================
+//  INDUSTRIES  (light)
+//  Reference "A flexible solution for diverse use cases":
+//  a 3x2 grid where each cell is illustration → title → bullets,
+//  with accent map-pins dropped over the illustrations.
+// ============================================================
+
+.industries {
+  position: relative;
+  background: var(--bg-light);
+  color: var(--ink-on-light);
+  overflow: hidden;
+}
+
+.industries__head .h2 {
+  max-width: 17ch;
+}
+
+.industries__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 3.4vw, 3.5rem);
+  row-gap: clamp(2.5rem, 5vw, 4.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.industry__visual {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 1.5rem;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: linear-gradient(170deg, #f4f4f2 0%, #fbfbfa 60%);
+}
+
+.industry__visual svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// The dropped accent pin
+.industry__pin {
+  position: absolute;
+  translate: -50% -100%;
+  width: 26px;
+  height: 34px;
+  color: var(--accent);
+  filter: drop-shadow(0 8px 14px rgba(var(--accent-rgb), 0.4));
+  z-index: 2;
+}
+
+.industry__title {
+  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--ink-on-light);
+}
+
+.industry__list {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.industry__list li {
+  position: relative;
+  padding-left: 1.05rem;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--ink-on-light-2);
+}
+
+.industry__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink-on-light-2);
+}
+
+// ---- Client quote attached to an industry --------------------
+
+.industry__quote {
+  margin-top: 1.25rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--r-md);
+  background: #fff;
+  border: 1px solid rgba(10, 10, 10, 0.06);
+  box-shadow: 0 12px 30px -22px rgba(10, 10, 10, 0.4);
+}
+
+.industry__quote p {
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--ink-on-light-2);
+}
+
+.industry__quote footer {
+  margin-top: 0.65rem;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--ink-on-light-3);
+}
+
+.industry__quote footer b {
+  display: block;
+  color: var(--ink-on-light);
+  font-weight: 600;
+  font-size: var(--fs-xs);
+}
+
+@media (max-width: 992px) {
+  .industries__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .industries__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

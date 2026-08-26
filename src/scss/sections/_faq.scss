@@ -1,0 +1,79 @@
+// ============================================================
+//  FAQ  (dark)
+//  Reference: a light-weight centred heading and a stack of
+//  rounded rows. The open row lifts to a lighter surface and
+//  its caret flips; the answer height is animated by GSAP.
+// ============================================================
+
+.faq {
+  position: relative;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+.faq__title {
+  text-align: center;
+  font-weight: var(--hw-dark);
+}
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: 1060px;
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+}
+
+.faq__item {
+  border-radius: var(--r-lg);
+  background: linear-gradient(160deg, #111111, #0b0b0b);
+  border: 1px solid var(--line-dark);
+  overflow: hidden;
+  transition: background var(--t-mid) var(--e-out),
+    border-color var(--t-mid) var(--e-out);
+}
+
+.faq__item.is-open {
+  background: linear-gradient(160deg, #1a1a1a, #131313);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.faq__q {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: clamp(1.1rem, 1.6vw, 1.45rem) clamp(1.25rem, 2vw, 1.9rem);
+  text-align: left;
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink-on-dark);
+}
+
+.faq__caret {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: rgba(255, 255, 255, 0.65);
+  transition: transform var(--t-mid) var(--e-out);
+}
+
+.faq__item.is-open .faq__caret {
+  transform: rotate(180deg);
+  color: #fff;
+}
+
+.faq__a {
+  height: 0;
+  overflow: hidden;
+}
+
+.faq__a-inner {
+  padding: 0 clamp(1.25rem, 2vw, 1.9rem) clamp(1.25rem, 1.9vw, 1.6rem)
+    calc(clamp(1.25rem, 2vw, 1.9rem) + 16px + 1rem);
+  font-size: var(--fs-sm);
+  line-height: 1.68;
+  color: var(--ink-on-dark-2);
+  max-width: 92ch;
+}

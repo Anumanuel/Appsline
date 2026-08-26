@@ -1,0 +1,162 @@
+// ============================================================
+//  DESIGN TOKENS
+//  Values measured from the reference video (720x720 capture,
+//  site panel = 648px wide crop == 100% of the browser viewport).
+//  Percentages below are ratios taken off that crop, then mapped
+//  to a 1440px design width.
+// ============================================================
+
+:root {
+  // ---- Accent -------------------------------------------------
+  // Appsline's own palette, sampled straight from the logo file:
+  // blue #0095DA and teal #54C5D0. Every glow, beam and gradient keeps
+  // the reference's exact geometry and intensity — only the hue is the
+  // brand's.
+  //
+  // The reference's orange is available as a one-attribute switch:
+  //   <html data-accent="reference">
+  --accent: #0095da;
+  --accent-2: #54c5d0;
+  --accent-deep: #0074ab;
+  // The beam core in the reference reads almost white, only tinted by
+  // the accent — a saturated tint here turns the hero into a blob.
+  --accent-hot: #d6f2ff;
+  --accent-ink: #ffffff; // text on top of --accent
+
+  --accent-rgb: 0, 149, 218;
+  --accent-2-rgb: 84, 197, 208;
+  --accent-deep-rgb: 0, 116, 171;
+  --accent-hot-rgb: 214, 242, 255;
+
+  // ---- Surfaces ----------------------------------------------
+  // sampled: dark-section-bg #080808, hero-bg #090401,
+  //          white-section-bg #fafbf8, card #181818
+  --bg-dark: #070707;
+  --bg-dark-soft: #0b0b0b;
+  --bg-light: #fafaf8;
+  --bg-light-warm: #f6f5f2;
+
+  --surface-1: #101010; // bento / faq card
+  --surface-2: #161616; // raised card, chip tile
+  --surface-3: #1d1d1d; // hover
+  --surface-light: #ffffff;
+
+  --line-dark: rgba(255, 255, 255, 0.08);
+  --line-dark-soft: rgba(255, 255, 255, 0.045);
+  --line-light: rgba(10, 10, 10, 0.09);
+
+  // ---- Ink ----------------------------------------------------
+  --ink-on-dark: #ffffff;
+  --ink-on-dark-2: #a8a8a8; // body copy on dark
+  --ink-on-dark-3: #6e6e6e; // muted / legal
+  --ink-on-light: #0a0a0a;
+  --ink-on-light-2: #5c5c5c;
+  --ink-on-light-3: #8a8a8a;
+
+  // ---- Type ---------------------------------------------------
+  --font-sans: "Outfit", "Aeonik", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  // Heading weights differ by surface in the reference: light-surface
+  // headings are bold, dark-surface headings are regular/medium so the
+  // thin strokes read against the glow.
+  --hw-dark: 400;
+  --hw-dark-strong: 500;
+  --hw-light: 700;
+
+  // Sizes derived from cap-height measurements on the reference frames:
+  // hero 'I' cap = 43px @1440 => ~60px; section-heading 'U' cap = 36px
+  // => ~46px. Both were noticeably larger in the first pass.
+  --fs-h1: clamp(2.5rem, 4.45vw, 4rem); // hero  (~64px @1440, cap ~50)
+  --fs-h2: clamp(1.85rem, 3.3vw, 3rem); // section headings (~47px @1440)
+  --fs-h3: clamp(1.15rem, 1.5vw, 1.4rem); // bento / card titles
+  // Reference lead measures ~8px per character on a 542px line => ~15px.
+  --fs-lead: clamp(0.9rem, 1.06vw, 0.95rem);
+  --fs-body: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.8125rem;
+  --fs-badge: 0.78rem;
+
+  --lh-tight: 1.08;
+  --lh-heading: 1.12;
+  --lh-body: 1.6;
+
+  --ls-h1: -0.028em;
+  --ls-h2: -0.024em;
+  --ls-h3: -0.012em;
+
+  // ---- Layout -------------------------------------------------
+  // side padding measured at 5.2% of viewport => 75px @1440
+  --gutter: clamp(1.25rem, 5.2vw, 4.5rem);
+  --container: 1296px;
+  --container-narrow: 900px;
+  --container-wide: 1440px;
+
+  --section-py: clamp(4.5rem, 9vw, 8.5rem);
+  --grid-gap: clamp(0.75rem, 1.1vw, 1rem);
+
+  // ---- Radii --------------------------------------------------
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+  --r-pill: 999px;
+
+  // ---- Nav ----------------------------------------------------
+  --nav-h: 72px;
+  --nav-pill-h: 52px;
+  --announce-h: 40px;
+
+  // ---- Motion -------------------------------------------------
+  // The reference eases are long and soft on reveals, snappy on hover.
+  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 0.22s;
+  --t-mid: 0.45s;
+  --t-slow: 0.9s;
+
+  --z-webgl: 1;
+  --z-content: 2;
+  --z-nav: 60;
+  --z-preloader: 100;
+}
+
+// ---- Reference (video) accent ---------------------------------
+// One attribute on <html data-accent="reference"> swings every glow,
+// beam, button and gradient to the exact orange sampled from the
+// video (#FF3F00), keeping the geometry untouched.
+:root[data-accent="reference"] {
+  --accent: #ff3f00;
+  --accent-2: #ff8a3d;
+  --accent-deep: #c22c00;
+  --accent-hot: #ffe2be;
+  --accent-ink: #ffffff;
+
+  --accent-rgb: 255, 63, 0;
+  --accent-2-rgb: 255, 138, 61;
+  --accent-deep-rgb: 194, 44, 0;
+  --accent-hot-rgb: 255, 226, 190;
+}
+
+// ============================================================
+//  Breakpoints
+// ============================================================
+$bp-xl: 1440px;
+$bp-lg: 1200px;
+$bp-md: 992px;
+$bp-sm: 768px;
+$bp-xs: 560px;
+
+@mixin upto($bp) {
+  @media (max-width: $bp) {
+    @content;
+  }
+}
+@mixin from($bp) {
+  @media (min-width: $bp + 1px) {
+    @content;
+  }
+}
