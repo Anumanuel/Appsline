@@ -40,14 +40,7 @@ function project(lon, lat, lon0, lat0) {
  * @param {{lon0?:number, lat0?:number, rows?:number, equator?:number}} [opts]
  */
 export function mountMiniGlobe(host, opts = {}) {
-  // The card crops this sphere to its top cap, so the view centre is what
-  // decides whether the delivery markers are on screen at all. At the old
-  // (34, 12) they projected to 39% down the disc, which the card's lower
-  // edge cut off — the three brightest things on the artwork were sitting
-  // just below the crop. Viewing from (52, -6) swings the region up to
-  // ~25% and centres it: the markers land in the visible cap, spread
-  // across it rather than stacked.
-  const { lon0 = 52, lat0 = -6, rows = 58, equator = 116 } = opts;
+  const { lon0 = 34, lat0 = 12, rows = 58, equator = 116 } = opts;
 
   // Appsline's delivery locations, marked in the accent colour.
   const sites = [
@@ -86,24 +79,13 @@ export function mountMiniGlobe(host, opts = {}) {
 
   svg.appendChild(g);
 
-  // Each site is a hot core inside a wide, faint ring — the ring is what
-  // separates a marker from the land dots around it, which are the same
-  // shape and only a little smaller.
   sites.forEach((s) => {
     const p = project(s.lon, s.lat, lon0, lat0);
     if (!p) return;
-
-    const ring = document.createElementNS(SVG_NS, "circle");
-    ring.setAttribute("cx", p.x.toFixed(4));
-    ring.setAttribute("cy", (-p.y).toFixed(4));
-    ring.setAttribute("r", "0.062");
-    ring.setAttribute("class", "art-globe__halo");
-    svg.appendChild(ring);
-
     const c = document.createElementNS(SVG_NS, "circle");
     c.setAttribute("cx", p.x.toFixed(4));
     c.setAttribute("cy", (-p.y).toFixed(4));
-    c.setAttribute("r", "0.026");
+    c.setAttribute("r", "0.032");
     c.setAttribute("class", "art-globe__site");
     svg.appendChild(c);
   });

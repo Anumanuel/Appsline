@@ -515,42 +515,6 @@ that leave through the floor land within a few pixels of the fold, so the SVG
 carries a `mask-image` fading its last 12% — without it they end on a hard
 horizontal cut that reads as clipping rather than as design.
 
-## Bento card artwork
-
-Every card's artwork is built from the same small vocabulary rather than
-each one being its own invention. Reusing five pieces across seven cards is
-what makes the grid read as one system:
-
-| Piece | Class | Used by |
-| --- | --- | --- |
-| Long shallow sweeps crossing the card | `.art-orbits` | globe |
-| Concentric orbit rings around a glyph | `.art-rings` | security |
-| A bar of light with a hot head | `.art-comet` | globe, security, OEM, nodes, autoscaling |
-| A bordered inner surface | `.art-frame` | node graph |
-| Fine traces with lit branches | `.art-traces` | autoscaling |
-
-Two rules worth keeping.
-
-**Glow is gradients and box-shadows, never an SVG filter.** A filter on card
-artwork is re-rasterised every frame, on every card carrying one, while the
-section is on screen. The comet is a linear-gradient with a hot stop near its
-head plus a `box-shadow` halo; the trace pulses are a wide faint stroke under
-a thin bright one. Both read as a Gaussian glow and cost ordinary
-rasterisation. (`drop-shadow` on the few *static* elements — ring strokes,
-site markers — is fine: nothing animates them.)
-
-**A comet travels along its own axis.** Its rotation lives in CSS
-(`--a`, about its left edge) and its travel lives in `bento.js` as
-`xPercent`, so the two compose: animating x moves it the way it points.
-Computing a rotated translation vector in JS would mean fighting the
-transform CSS has already applied. `xPercent` rather than `x` so a 78px comet
-and a 132px one cover proportionate ground.
-
-Comets start at `opacity: 0` so they can fade in on the sweep, which means
-under `prefers-reduced-motion` nothing would ever raise it. `initBento` puts
-`.is-static` on the section in that case, and the stylesheet holds them
-visible — the artwork loses its motion, not its pieces.
-
 ### If you are tempted to make sections sticky again
 
 Read "Removing the section stacking fixed three bugs at once" above first. The
