@@ -1,12 +1,17 @@
 /**
  * Hero circuit board.
  *
- * The reference runs short glowing pulses along the traces toward the
- * central chip. Each pulse is a cloned trace path drawn with a single
- * dash: `stroke-dasharray: SEG, length` and an offset animated from
- * `SEG` (dash sits just before the path start) to `-length` (dash has
- * left the far end). Duration is derived from path length so every
- * pulse travels at the same speed regardless of route length.
+ * Short glowing pulses run along the traces, radiating OUT from the central
+ * chip. Each pulse is a cloned trace path drawn with a single dash:
+ * `stroke-dasharray: SEG, length` and an offset animated from `SEG` (dash
+ * sits just before the path start) to `-length` (dash has left the far
+ * end). Duration is derived from path length so every pulse travels at the
+ * same speed regardless of route length.
+ *
+ * The outward direction is a property of the markup, not of this file:
+ * every path in index.html is authored starting at a chip pin, and the
+ * animation always runs start → end. Reverse a path's `d` and that one
+ * pulse will run backwards into the chip.
  */
 import { gsap, ScrollTrigger, prefersReducedMotion } from "../utils/motion.js";
 
@@ -25,14 +30,32 @@ export function initCircuit() {
   const traces = root.querySelectorAll(".circuit__trace");
   if (!traces.length) return;
 
-  // --- solder pads where each trace leaves its tile -------------------
+  // --- solder pads where each trace lands on a tile --------------------
+  //
+  // Every trace now starts at a chip pin and runs outward, so the pad goes
+  // at the END of the path, not the start — a pad at index 0 would stack a
+  // dot on top of each of the chip's own pins.
+  //
+  // Traces that leave the board (the two side exits and the four legs under
+  // the chip) terminate on the frame edge rather than on a tile, and get no
+  // pad: a solder dot sitting on the cut edge reads as a trace stopping in
+  // mid-air, which is the exact thing the routing is built to avoid.
   const padLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  const [BOARD_W, BOARD_H] = [1440, 380];
+  const EDGE = 4;
 
   traces.forEach((trace) => {
-    const start = trace.getPointAtLength(0);
+    const end = trace.getPointAtLength(trace.getTotalLength());
+    const onEdge =
+      end.x <= EDGE ||
+      end.x >= BOARD_W - EDGE ||
+      end.y <= EDGE ||
+      end.y >= BOARD_H - EDGE;
+    if (onEdge) return;
+
     const pad = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    pad.setAttribute("cx", start.x);
-    pad.setAttribute("cy", start.y);
+    pad.setAttribute("cx", end.x);
+    pad.setAttribute("cy", end.y);
     pad.setAttribute("r", "3");
     pad.setAttribute("class", "circuit__pad");
     padLayer.appendChild(pad);

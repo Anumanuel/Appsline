@@ -239,44 +239,83 @@
 
   <!-- ── Circuit board ─────────────────────────────────────── -->
   <div class="circuit" id="circuit">
-    <svg class="circuit__svg" viewBox="0 0 1440 620" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="circuit__svg" viewBox="0 0 1440 380" preserveAspectRatio="none" aria-hidden="true">
       <!--
-        Coordinates are measured off the reference frame. Chip centre
-        (711,115), half-width 66 => left edge 645, right edge 777,
-        bottom 181. Tiles connect to three tap points per side at
-        y = 90 / 115 / 140. Corner radius is a uniform 16.
+        ONE COORDINATE SYSTEM FOR THE WHOLE BOARD.
+
+        `.circuit` carries aspect-ratio 1440/380 — the viewBox's own ratio —
+        so `preserveAspectRatio="none"` resolves to a *uniform* scale of
+        (board width / 1440). One viewBox unit is therefore one CSS pixel at
+        a 1440px board, and the chip and tiles are sized as percentages of
+        the board rather than in fixed px, so they scale on exactly the same
+        factor. That is what lets a DOM chip and SVG traces stay welded
+        together at every viewport width.
+
+        Chip: 121 units square (8.4% of 1440), centred at (720,170).
+          edges  x 660 / 780,  y 110 / 230
+          pins   left+right at y 137,159,181,203  (22 apart, centred on 170)
+                 top+bottom at x 687,709,731,753  (22 apart, centred on 720)
+          Pins protrude 10 units, so a trace leaving the chip starts at the
+          pin's outer tip — x 650 / 790, y 100 / 240 — not at the chip edge.
+
+        Every one of the 12 traces STARTS at a pin. That direction is the
+        whole point: js/animations/circuit.js runs each pulse from path
+        start to path end, so pulses radiate outward from the chip instead
+        of crawling inward toward it.
+
+        Corner radius is a uniform 16, which needs 32 units of clearance in
+        both axes — the middle tile on each side is therefore fed by a
+        straight horizontal run at the pin's own y, not a cornered one.
       -->
       <g class="circuit__traces">
-        <!-- left column → chip left edge -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M204 33 H384 Q400 33 400 49 V74 Q400 90 416 90 H645"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M109 153 H304 Q320 153 320 137 V131 Q320 115 336 115 H645"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M195 268 H484 Q500 268 500 252 V156 Q500 140 516 140 H645"/>
-        <!-- right column → chip right edge -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1204 26 H1056 Q1040 26 1040 42 V74 Q1040 90 1024 90 H777"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1320 151 H1136 Q1120 151 1120 135 V131 Q1120 115 1104 115 H777"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1250 278 H976 Q960 278 960 262 V156 Q960 140 944 140 H777"/>
-        <!--
-          Every trace below terminates at something: a tile pad, the chip,
-          or a frame edge. Nothing stops in mid-air.
+        <!-- chip LEFT pins → three tiles, then one exit through the floor -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 137 H446 Q430 137 430 121 V74 Q430 58 414 58 H217"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 159 H127"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 181 H576 Q560 181 560 197 V284 Q560 300 544 300 H217"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M650 203 H516 Q500 203 500 219 V380"/>
 
-          The previous set had eight traces ending at arbitrary interior
-          points — (430,516), (1030,468), (600,536), (840,536), (470,612),
-          (970,612), (620,568), (820,568) — which is what made the board
-          read as scattered line fragments rather than one connected
-          system.
-        -->
-        <!-- chip underside: four legs straight down and out of frame,
-             as the reference's board does -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M683 191 V620"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M702 191 V620"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M721 191 V620"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M740 191 V620"/>
-        <!-- the two lower tiles drop straight out of frame -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M161 306 V620"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1284 316 V620"/>
-        <!-- edge to edge: in at the side, out at the bottom -->
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M0 400 H236 Q252 400 252 416 V620"/>
-        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M1440 400 H1204 Q1188 400 1188 416 V620"/>
+        <!-- chip RIGHT pins, mirrored about x=720 -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 137 H994 Q1010 137 1010 121 V74 Q1010 58 1026 58 H1223"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 159 H1313"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 181 H864 Q880 181 880 197 V284 Q880 300 896 300 H1223"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M790 203 H924 Q940 203 940 219 V380"/>
+
+        <!-- chip BOTTOM pins: four short legs straight down to the floor -->
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M687 240 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M709 240 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M731 240 V380"/>
+        <path class="circuit__trace" vector-effect="non-scaling-stroke" d="M753 240 V380"/>
+      </g>
+
+      <!--
+        Chip pins, drawn here rather than as CSS pseudo-elements on the chip.
+        They share the traces' coordinate system, so a pin and the trace
+        leaving it cannot drift apart no matter how the board is scaled —
+        which is exactly what happened when they were CSS flex children
+        measured in px against an SVG measured in viewBox units.
+        The top row carries no trace; it is there because a real package has
+        pins on all four edges.
+      -->
+      <g class="circuit__pins">
+        <rect x="650" y="135.5" width="10" height="3" rx="1.5"/>
+        <rect x="650" y="157.5" width="10" height="3" rx="1.5"/>
+        <rect x="650" y="179.5" width="10" height="3" rx="1.5"/>
+        <rect x="650" y="201.5" width="10" height="3" rx="1.5"/>
+
+        <rect x="780" y="135.5" width="10" height="3" rx="1.5"/>
+        <rect x="780" y="157.5" width="10" height="3" rx="1.5"/>
+        <rect x="780" y="179.5" width="10" height="3" rx="1.5"/>
+        <rect x="780" y="201.5" width="10" height="3" rx="1.5"/>
+
+        <rect x="685.5" y="230" width="3" height="10" rx="1.5"/>
+        <rect x="707.5" y="230" width="3" height="10" rx="1.5"/>
+        <rect x="729.5" y="230" width="3" height="10" rx="1.5"/>
+        <rect x="751.5" y="230" width="3" height="10" rx="1.5"/>
+
+        <rect x="685.5" y="100" width="3" height="10" rx="1.5"/>
+        <rect x="707.5" y="100" width="3" height="10" rx="1.5"/>
+        <rect x="729.5" y="100" width="3" height="10" rx="1.5"/>
+        <rect x="751.5" y="100" width="3" height="10" rx="1.5"/>
       </g>
 
       <!-- Pulses are cloned from the traces above at runtime. -->
@@ -284,23 +323,19 @@
     </svg>
 
     <!--
-      Vendor tiles. Percentages are the reference's tile centres mapped
-      onto the 1440x620 board: x from the frame directly, y as the
-      measured offset below the board's top edge divided by 620.
+      Vendor tiles, 78 units square (5.4% of the board). Percentages are the
+      tile centres in the viewBox above: x/1440 and y/380. The middle tile on
+      each side sits at y=159 so its trace is a straight run off the pin.
     -->
-    <a class="circuit__tile" style="left:11.8%;top:5.3%"  href="#solutions" aria-label="Aruba"><span class="tile-txt">aruba</span></a>
-    <a class="circuit__tile" style="left:5.2%;top:24.7%"  href="#solutions" aria-label="Hewlett Packard Enterprise"><span class="tile-txt">hpe</span></a>
-    <a class="circuit__tile" style="left:11.2%;top:43.2%" href="#solutions" aria-label="Dell"><span class="tile-txt">dell</span></a>
-    <a class="circuit__tile" style="left:86%;top:4.2%"    href="#solutions" aria-label="Fortinet"><span class="tile-txt">ftnt</span></a>
-    <a class="circuit__tile" style="left:94%;top:24.4%"   href="#solutions" aria-label="Sophos"><span class="tile-txt">sophos</span></a>
-    <a class="circuit__tile" style="left:89.2%;top:44.8%" href="#solutions" aria-label="Hikvision"><span class="tile-txt">hik</span></a>
+    <a class="circuit__tile" style="left:12.36%;top:15.26%" href="#solutions" aria-label="Aruba"><span class="tile-txt">aruba</span></a>
+    <a class="circuit__tile" style="left:6.11%;top:41.84%"  href="#solutions" aria-label="Hewlett Packard Enterprise"><span class="tile-txt">hpe</span></a>
+    <a class="circuit__tile" style="left:12.36%;top:78.95%" href="#solutions" aria-label="Dell"><span class="tile-txt">dell</span></a>
+    <a class="circuit__tile" style="left:87.64%;top:15.26%" href="#solutions" aria-label="Fortinet"><span class="tile-txt">ftnt</span></a>
+    <a class="circuit__tile" style="left:93.89%;top:41.84%" href="#solutions" aria-label="Sophos"><span class="tile-txt">sophos</span></a>
+    <a class="circuit__tile" style="left:87.64%;top:78.95%" href="#solutions" aria-label="Hikvision"><span class="tile-txt">hik</span></a>
 
-    <!-- Central chip -->
+    <!-- Central chip. Pins live in the SVG above. -->
     <div class="circuit__chip">
-      <span class="circuit__legs circuit__legs--y circuit__legs--left"><i></i><i></i><i></i><i></i></span>
-      <span class="circuit__legs circuit__legs--y circuit__legs--right"><i></i><i></i><i></i><i></i></span>
-      <span class="circuit__legs circuit__legs--x circuit__legs--top"><i></i><i></i><i></i><i></i></span>
-      <span class="circuit__legs circuit__legs--x circuit__legs--bottom"><i></i><i></i><i></i><i></i></span>
       <svg class="circuit__chip-mark" viewBox="0 0 141 87" aria-hidden="true">
         <rect x="0"      y="12.2" width="11.7" height="74.5" rx="5.85" fill="#fff"/>
         <rect x="21.55"  y="12.2" width="11.7" height="74.5" rx="5.85" fill="rgba(255,255,255,.65)"/>

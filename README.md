@@ -457,11 +457,48 @@ since it was written; the current name is `syncTouch`.
 
 ## The hero circuit
 
-Eight of the board's traces used to end at arbitrary interior points —
-(430,516), (1030,468), (600,536), (840,536), (470,612), (970,612), (620,568),
-(820,568) — which is what made it read as scattered fragments. Every trace now
-terminates at a tile pad, the chip, or a frame edge; `tools/probe.js` can
-verify this by classifying both endpoints of all 14.
+The board is a 1440x380 viewBox holding 12 traces. **Every trace starts at a
+chip pin and runs outward** — 4 off the left edge, 4 off the right, 4 straight
+down from the underside. That direction is the whole design: the pulse
+animation always runs a path from start to end, so authoring the paths from
+the chip is what makes the light radiate out of it rather than crawl into it.
+Reverse a path's `d` and that one pulse runs backwards.
+
+Pin positions are `x 650/790` and `y 137,159,181,203` on the sides,
+`x 687,709,731,753` at top and bottom — 22 units apart, centred on a chip that
+spans 660-780 by 110-230. The corner radius is a uniform 16, which needs 32
+units of clearance in both axes, so the middle tile on each side is fed by a
+straight horizontal run at the pin's own y rather than a cornered one.
+
+**One coordinate system, enforced.** The chip and tiles are DOM elements and
+the traces are SVG, so they only stay welded together if both scale by the
+same factor. Two rules make that true, and both are load-bearing:
+
+- `.circuit`'s `aspect-ratio` **must** equal the viewBox's ratio. With the two
+  in step, `preserveAspectRatio="none"` resolves to a uniform scale. Give the
+  box a different ratio — as the old responsive rules did, at 900/640 and
+  700/700 — and the axes scale differently: traces stretch, the square chip
+  does not, and every pin comes away from its trace.
+- The chip and tiles are sized as **percentages of the board**, never in px.
+  A px clamp agrees with the board's scale at exactly one width.
+
+The pins themselves are drawn in the SVG for the same reason. As CSS flex
+children of the chip they were measured in px against a diagram measured in
+viewBox units.
+
+`tools/probe-circuit.js` asserts all three invariants — uniform scale, chip
+edges on their pins, and every trace starting on a pin:
+
+```
+node tools/shoot.mjs --evalfile tools/probe-circuit.js --only __none__
+```
+
+The board is 380 units rather than the 620 it used to be because it has to fit
+above the fold: at 1440x900 the hero leaves ~380px between the copy and the
+bottom of the viewport, and the old board ran 299px past it. The six traces
+that leave through the floor land within a few pixels of the fold, so the SVG
+carries a `mask-image` fading its last 12% — without it they end on a hard
+horizontal cut that reads as clipping rather than as design.
 
 ### If you are tempted to make sections sticky again
 

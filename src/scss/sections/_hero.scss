@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // ============================================================
 //  HERO
 //  Full-viewport dark stage: faint grid, diagonal beam from the
@@ -14,7 +16,9 @@
   // to be cleared here. The reference leaves ~150px between nav and badge,
   // but its headline is one line where Appsline's is two — that extra line
   // is split between this gap and the board sitting slightly lower.
-  padding-top: calc(var(--nav-h) + clamp(1.5rem, 11.5vh, 7rem));
+  // Trimmed from 11.5vh: the board below needs its full 380 units inside the
+  // first viewport, and this gap was the cheapest place to find them.
+  padding-top: calc(var(--nav-h) + clamp(1rem, 6.5vh, 4.5rem));
   padding-bottom: 0;
   overflow: hidden;
   background: var(--bg-dark);
@@ -62,12 +66,18 @@
   position: relative;
   z-index: var(--z-content);
   width: 100%;
-  margin-top: clamp(0.5rem, 2vh, 1.5rem);
-  // 1 viewBox unit == 1 CSS px at 1440 wide, which keeps the measured
-  // trace coordinates meaningful. The board is taller than the space
-  // left in the hero, so it bleeds past the fold as the reference does.
-  aspect-ratio: 1440 / 620;
-  min-height: 320px;
+  margin-top: clamp(0.125rem, 0.4vh, 0.5rem);
+  // Matches the SVG viewBox ratio exactly. That is load-bearing, not
+  // tidiness: with the two in step, `preserveAspectRatio="none"` resolves
+  // to a uniform scale, so 1 viewBox unit is 1 CSS px at a 1440px board and
+  // the percentage-sized chip and tiles land on the traces. Give the box a
+  // different ratio and the axes scale by different factors — the traces
+  // stretch, the square chip does not, and the pins drift off their traces.
+  //
+  // 380 units tall, not the 620 it used to be: at 1440x900 the hero leaves
+  // ~380px between the copy and the fold, and the board was running 299px
+  // past it. The whole board is now inside the first viewport.
+  aspect-ratio: 1440 / 380;
 }
 
 .circuit__svg {
@@ -76,6 +86,13 @@
   width: 100%;
   height: 100%;
   overflow: visible;
+  // The six traces that leave through the floor now stop at the board's
+  // bottom edge, which sits within a couple of pixels of the fold — so
+  // without this they end on a hard horizontal cut that reads as clipping
+  // rather than as design. Fading the last 12% lets them run off into the
+  // dark instead. Starts at 88% (=334 units) so it is below where the dell
+  // and hik traces land at y=300 and cannot dim those.
+  mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
 }
 
 // Static trace
@@ -114,8 +131,9 @@
   translate: -50% -50%;
   display: grid;
   place-items: center;
-  // Reference tile measures 78px @1440.
-  width: clamp(50px, 5.4vw, 78px);
+  // 78 viewBox units — as a percentage of the board, not a px clamp, so the
+  // tile tracks the SVG's scale and its trace always lands on its edge.
+  width: percentage(math.div(78, 1440));
   aspect-ratio: 1;
   border-radius: clamp(14px, 1.6vw, 22px);
   background: linear-gradient(160deg, #1e1e1e, #131313);
@@ -140,16 +158,19 @@
 
 // ---- Central chip --------------------------------------------
 
-// Chip centre measured at 115px below the board's top edge (viewBox y=115).
+// Chip centre (720,170) in the viewBox: 720/1440 and 170/380.
 .circuit__chip {
   position: absolute;
-  left: 49.4%;
-  top: 18.5%;
+  left: 50%;
+  top: percentage(math.div(170, 380));
   translate: -50% -50%;
   display: grid;
   place-items: center;
-  // Reference chip measures 121px @1440.
-  width: clamp(92px, 8.4vw, 121px);
+  // 121 viewBox units. A percentage of the board, never a px clamp: the
+  // pins are drawn in the SVG at the chip's nominal edges (x 660/780,
+  // y 110/230), so any px sizing that disagreed with the board's scale
+  // would push the chip's painted edge off its own pins.
+  width: percentage(math.div(121, 1440));
   aspect-ratio: 1;
   border-radius: clamp(20px, 2vw, 28px);
   background: linear-gradient(155deg, #232323, #141414);
@@ -163,53 +184,12 @@
   height: auto;
 }
 
-// Chip legs — four rows of small rounded bars, one per edge.
-.circuit__legs {
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.circuit__legs i {
-  display: block;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 2px;
-}
-
-.circuit__legs--y i {
-  width: 10px;
-  height: 3px;
-}
-
-.circuit__legs--x i {
-  width: 3px;
-  height: 10px;
-}
-
-.circuit__legs--left {
-  right: 100%;
-  top: 50%;
-  translate: 0 -50%;
-  flex-direction: column;
-}
-
-.circuit__legs--right {
-  left: 100%;
-  top: 50%;
-  translate: 0 -50%;
-  flex-direction: column;
-}
-
-.circuit__legs--top {
-  bottom: 100%;
-  left: 50%;
-  translate: -50% 0;
-}
-
-.circuit__legs--bottom {
-  top: 100%;
-  left: 50%;
-  translate: -50% 0;
+// Chip pins. Drawn in the SVG (see index.html) so they share the traces'
+// coordinate system — as CSS flex children they were measured in px against
+// an SVG measured in viewBox units, and drifted off their traces at every
+// width except exactly 1440.
+.circuit__pins rect {
+  fill: rgba(255, 255, 255, 0.34);
 }
 
 // Soft halo under the chip
@@ -229,11 +209,14 @@
 
 // ---- Responsive ----------------------------------------------
 
-@media (max-width: 992px) {
-  .circuit {
-    aspect-ratio: 900 / 640;
-  }
-}
+// The board's aspect ratio is deliberately NOT overridden at any breakpoint.
+// It used to become 900/640 at 992 and 700/700 at 768, which stretched the
+// two axes by different factors: the traces distorted, the square chip and
+// tiles did not, and every pin came away from its trace.
+//
+// Down to the phone breakpoint the board simply scales — at 900px wide it is
+// 237px tall with a 76px chip, which still reads. Cropping it here instead
+// only sliced the outer tiles in half at the viewport edge.
 
 @media (max-width: 768px) {
   .hero {
@@ -251,7 +234,13 @@
     width: 100%;
   }
 
+  // Below this a proportional board is genuinely too small — at 390px wide
+  // it would be 103px tall with a 33px chip. So the board is widened past
+  // the viewport and centred on the chip: the outer tiles crop away
+  // entirely and what is left is the chip and its trace runs, at a legible
+  // size and with the geometry undistorted. `.hero` clips the overflow.
   .circuit {
-    aspect-ratio: 700 / 700;
+    width: 210%;
+    margin-inline-start: -55%;
   }
 }
