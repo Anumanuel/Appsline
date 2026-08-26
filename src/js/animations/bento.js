@@ -106,6 +106,46 @@ function streakSweep(root) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Comet streaks                                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A comet runs along its OWN axis, not the card's.
+ *
+ * Each streak is already rotated by `--a` about its left edge, so animating
+ * `x` moves it along the direction it points — which is the whole reason
+ * the rotation lives in CSS and the travel lives here. Writing the travel
+ * as a rotated translate in JS would mean recomputing the vector per
+ * element and fighting the transform CSS has already applied.
+ *
+ * `xPercent` rather than `x`, so a 78px comet and a 132px one cover
+ * proportionate ground instead of the short one crawling.
+ */
+function cometSweep(root) {
+  const comets = Array.from(root.querySelectorAll(".art-comet"));
+  if (!comets.length) return null;
+
+  const tl = gsap.timeline({ repeat: -1, paused: true });
+
+  comets.forEach((el, i) => {
+    // Spread the starts so the section never flashes them all at once.
+    const at = i * 1.35;
+
+    tl.fromTo(
+      el,
+      { xPercent: -120, opacity: 0 },
+      { xPercent: 150, duration: 2.6, ease: "power1.inOut" },
+      at
+    )
+      .to(el, { opacity: 1, duration: 0.55, ease: "power2.out" }, at + 0.15)
+      .to(el, { opacity: 0, duration: 0.85, ease: "power2.in" }, at + 1.75);
+  });
+
+  tl.set({}, {}, comets.length * 1.35 + 1.6);
+  return tl;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Pointer depth                                                      */
 /* ------------------------------------------------------------------ */
 
@@ -152,9 +192,19 @@ export function initBento() {
   const section = document.getElementById("why");
   if (!section) return;
 
-  if (prefersReducedMotion) return;
+  // Comets start at opacity 0 so they can fade in on their sweep. With
+  // motion off nothing would ever raise it, so hand the card a static
+  // state instead of leaving the artwork with invisible pieces in it.
+  if (prefersReducedMotion) {
+    section.classList.add("is-static");
+    return;
+  }
 
-  const loops = [traceLight(section), streakSweep(section)].filter(Boolean);
+  const loops = [
+    traceLight(section),
+    streakSweep(section),
+    cometSweep(section),
+  ].filter(Boolean);
 
   if (loops.length) {
     // Only burn frames while the section is on screen.

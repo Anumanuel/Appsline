@@ -148,9 +148,19 @@
   fill: #b9b9cc;
 }
 
+// Delivery locations. Deliberately hot and over-bright relative to the
+// land dots — in the reference these are the only saturated thing on the
+// card, and at the dots' own weight they were invisible against them.
 .art-globe__site {
-  fill: var(--accent);
-  filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.95));
+  fill: var(--accent-hot);
+  filter: drop-shadow(0 0 4px rgba(var(--accent-hot-rgb), 1))
+    drop-shadow(0 0 11px rgba(var(--accent-rgb), 0.95));
+}
+
+.art-globe__halo {
+  fill: none;
+  stroke: rgba(var(--accent-rgb), 0.55);
+  stroke-width: 0.012;
 }
 
 // Grid of rounded tiles (OEM partner wall)
@@ -171,11 +181,21 @@
   border: 1px solid var(--line-dark-soft);
 }
 
-// The highlighted centre tile carries the accent
+// The highlighted centre tile carries the accent, and throws enough light
+// to register on its neighbours — a lit tile with no spill reads as a
+// coloured rectangle rather than as a lamp.
 .art-tiles i.is-lit {
   background: linear-gradient(160deg, var(--accent-2), var(--accent));
   border-color: transparent;
-  box-shadow: 0 10px 30px -10px rgba(var(--accent-rgb), 0.8);
+  box-shadow: 0 10px 30px -10px rgba(var(--accent-rgb), 0.8),
+    0 0 46px -4px rgba(var(--accent-rgb), 0.55);
+}
+
+// Two tiles at a fraction of the accent, to lead the eye across the grid.
+.art-tiles i.is-dim {
+  background: linear-gradient(160deg, rgba(var(--accent-2-rgb), 0.16),
+      rgba(var(--accent-rgb), 0.07));
+  border-color: rgba(var(--accent-rgb), 0.22);
 }
 
 // Node cluster around a central mark
@@ -184,18 +204,22 @@
   inset: 0;
 }
 
+// Dead centre of the frame, which is what the four corner nodes point at.
 .art-nodes__hub {
   position: absolute;
   left: 50%;
-  top: 34%;
+  top: 50%;
   translate: -50% -50%;
   display: grid;
   place-items: center;
   width: 66px;
   height: 66px;
   border-radius: 18px;
-  background: linear-gradient(155deg, #232323, #141414);
-  border: 1px solid var(--line-dark);
+  background: linear-gradient(155deg, #262626, #141414);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 34px -12px rgba(0, 0, 0, 1),
+    0 0 40px -6px rgba(var(--accent-rgb), 0.3);
+  z-index: 2;
 }
 
 .art-nodes__hub svg {
@@ -210,9 +234,11 @@
   width: 34px;
   height: 34px;
   border-radius: 11px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line-dark);
-  color: rgba(255, 255, 255, 0.55);
+  background: linear-gradient(160deg, #1c1c1c, #121212);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 1);
+  z-index: 2;
 }
 
 .art-nodes__n svg {
@@ -223,6 +249,127 @@
 .art-nodes__link {
   fill: none;
   stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+
+// ---- Orbital sweeps (globe card) -----------------------------
+// Long shallow arcs crossing the whole card and painting OVER the sphere.
+// Something has to cross a dotted disc for it to read as having a near and
+// a far side; without these the globe is a flat sticker.
+.art-orbits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.art-orbits path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.13);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+// The middle sweep carries the accent, so the set reads as lit rather than
+// as three grey hairlines.
+.art-orbits path:nth-child(2) {
+  stroke: rgba(var(--accent-rgb), 0.42);
+}
+
+// ---- Comet streak --------------------------------------------
+// A bar of light with a hot head and a tail that fades out behind it,
+// angled by `--a` and laid out from its own left edge. Built from a
+// gradient and a box-shadow rather than an SVG filter: a filter here would
+// be re-rasterised every frame on every card that carries one.
+.art-comet {
+  position: absolute;
+  height: 2px;
+  transform: rotate(var(--a, 0deg));
+  transform-origin: 0 50%;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--accent-rgb), 0.35) 46%,
+    rgba(var(--accent-2-rgb), 0.85) 78%,
+    var(--accent-hot) 96%,
+    #fff 100%
+  );
+  box-shadow: 0 0 16px 2px rgba(var(--accent-rgb), 0.55);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+// Visible without JS, since bento.js only animates these when motion is on.
+.no-js .art-comet,
+.is-static .art-comet {
+  opacity: 0.85;
+}
+
+// ---- Framed inner panel (node graph card) --------------------
+// The reference frames this graph on its own surface rather than letting
+// the nodes float on the card.
+.art-frame {
+  position: absolute;
+  left: clamp(1.1rem, 1.5vw, 1.5rem);
+  right: clamp(1.1rem, 1.5vw, 1.5rem);
+  top: clamp(1.1rem, 1.5vw, 1.5rem);
+  height: 62%;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line-dark);
+  background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.012) 46%,
+      transparent 78%
+    ),
+    #0d0d0d;
+  overflow: hidden;
+}
+
+// ---- Orbit rings (security card) -----------------------------
+.art-rings {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  translate: -50% -50%;
+  width: 88%;
+  aspect-ratio: 1;
+}
+
+.art-rings__o,
+.art-rings__c {
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.art-rings__o {
+  stroke: rgba(255, 255, 255, 0.17);
+}
+
+// The inner pair carry the accent and a real glow, so the rings read as
+// lit orbits rather than as construction lines around the glyph.
+.art-rings__c {
+  stroke: rgba(var(--accent-rgb), 0.5);
+  filter: drop-shadow(0 0 7px rgba(var(--accent-rgb), 0.55));
+}
+
+// ---- Wire behind the support chips ---------------------------
+.art-rows__wire {
+  position: absolute;
+  left: clamp(1.35rem, 1.9vw, 1.85rem);
+  right: 0;
+  bottom: 12%;
+  height: 46%;
+}
+
+.art-rows__wire path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.11);
   stroke-width: 1;
 }
 
@@ -260,10 +407,11 @@
 }
 
 // Shield / lock glyph on a soft disc (security card)
+// Sits at the centre of .art-rings, so the two read as one object.
 .art-disc {
   position: absolute;
-  left: 56%;
-  top: 62%;
+  left: 50%;
+  top: 58%;
   translate: -50% -50%;
   display: grid;
   place-items: center;
@@ -278,10 +426,14 @@
   );
 }
 
+// Bigger and brighter than it was: at 26% on a plain field it read as a
+// small icon dropped on the card rather than as the thing the orbit rings
+// are drawn around.
 .art-disc svg {
-  width: 26%;
-  color: rgba(255, 255, 255, 0.55);
-  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.9));
+  width: 34%;
+  color: rgba(255, 255, 255, 0.82);
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.9))
+    drop-shadow(0 0 26px rgba(var(--accent-rgb), 0.45));
 }
 
 // Stacked list rows (support / SLA card)
@@ -324,6 +476,13 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0;
+}
+
+// One node lit, as the reference does — it is what makes the pair read as
+// a live branch rather than two equal pills.
+.art-rows__dot.is-lit {
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.14),
+    0 0 22px 2px rgba(var(--accent-rgb), 0.8);
 }
 
 // Big OEM logo tile + spec panel (hardware card)
