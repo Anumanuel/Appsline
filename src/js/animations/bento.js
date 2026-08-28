@@ -135,6 +135,40 @@ function securityCard(root) {
     .map(pathGlow)
     .filter(Boolean);
 
+  // The wave: rings leaving the centre and dying at the outer band, one
+  // every 1.6s so there is usually more than one in flight.
+  //
+  // Sized in scale, not radius: tweening `r` would re-path the circle
+  // every frame and drop it off the compositor for no visual gain. The
+  // circles are authored at r=60, so 1.87 lands them exactly on the
+  // middle band at r=112. They stop there rather than running to the
+  // outermost band at 145 — that carried the wave out over the heading,
+  // and a wave that dies inside the disc stack reads as contained.
+  //
+  // Opacity peaks early and then decays over the rest of the trip. Fading
+  // it linearly made each ring read as a hard disc expanding rather than
+  // as energy losing itself into the dark.
+  const ripples = Array.from(guard.querySelectorAll(".art-guard__ripple"));
+  if (ripples.length) {
+    const tl = gsap.timeline({ repeat: -1, paused: true });
+    const STEP = 1.6;
+
+    ripples.forEach((ring, i) => {
+      const at = i * STEP;
+      tl.fromTo(
+        ring,
+        { scale: 0.32, opacity: 0 },
+        { scale: 1.87, duration: 4.8, ease: "power2.out" },
+        at
+      )
+        .to(ring, { opacity: 0.45, duration: 0.7, ease: "power2.out" }, at)
+        .to(ring, { opacity: 0, duration: 3.4, ease: "power1.in" }, at + 1.4);
+    });
+
+    tl.set({}, {}, ripples.length * STEP);
+    loops.push(tl);
+  }
+
   // Breath. ~1% over four and a half seconds is meant to be felt rather
   // than seen; larger reads as a pulse and competes with the lights.
   const rings = guard.querySelector(".art-guard__rings");

@@ -1726,13 +1726,13 @@ html.is-nav-pill .announce {
 
 .art-guard {
   position: absolute;
-  left: 50%;
-  top: 66%;
+  left: 62%;
+  top: 63%;
   translate: -50% -50%;
-  width: min(70%, 300px);
+  width: min(76%, 300px);
   aspect-ratio: 1;
-  --glow-rgb: 255, 122, 42;
-  --glow-hot: #ffd9b0;
+  --glow-rgb: 232, 96, 28;
+  --glow-hot: #ffc79a;
 }
 
 .art-guard__svg {
@@ -1743,9 +1743,29 @@ html.is-nav-pill .announce {
 
 .art-guard__rings circle {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.05);
+  stroke: rgba(255, 255, 255, 0.055);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
+}
+
+.art-guard__ripple {
+  fill: none;
+  stroke: rgba(var(--glow-rgb), 0.5);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  opacity: 0;
+}
+
+.is-static .art-guard__ripple {
+  opacity: 0.28;
+  transform: scale(1.6);
+}
+
+.is-static .art-guard__ripple:nth-child(2),
+.is-static .art-guard__ripple:nth-child(3) {
+  opacity: 0;
 }
 
 .art-guard__outline {

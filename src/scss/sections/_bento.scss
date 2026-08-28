@@ -287,24 +287,28 @@
 // ---- Security card: rings, shield outline, bolt, travelling light ----
 .art-guard {
   position: absolute;
-  left: 50%;
-  // Sits low on purpose. The card's copy scrim fades out around 52% of the
-  // height, and at dead centre the shield's whole upper half was under it —
-  // the outline is faint by design, so any scrim on top of it erases the
-  // shoulders entirely.
-  top: 66%;
+  // Pushed right and low, so the disc stack sits off the card's right edge
+  // with the copy clear to its left. Centred, it collided with the heading
+  // and the outermost band had nowhere to run off to.
+  left: 62%;
+  // The card's copy scrim fades out around 52% of the height, and at dead
+  // centre the shield's whole upper half was under it — the outline is
+  // faint by design, so any scrim on top of it erases the shoulders.
+  top: 63%;
   translate: -50% -50%;
-  width: min(70%, 300px);
+  // The outermost band is r=145 in a 240 viewBox, so it is always ~1.2x
+  // this box wide and runs off the card — which the reference does too.
+  // Past ~76% the rings started crossing the heading instead.
+  width: min(76%, 300px);
   aspect-ratio: 1;
 
-  // The glow colour, isolated to this card. This is the ONE place on the
-  // page that runs warm: the reference's security card is built around an
-  // amber light and it is the whole character of the artwork. Everything
-  // else on the site stays on the brand accent. Point these three at
-  // var(--accent)/(--accent-rgb)/(--accent-hot) to bring the card back in
-  // line with the rest of the page.
-  --glow-rgb: 255, 122, 42;
-  --glow-hot: #ffd9b0;
+  // The warm light, isolated to this card. Deepened from the earlier
+  // 255,122,42: at that strength the glow was the brightest thing in the
+  // whole bento row and pulled the eye off the globe card next to it.
+  // This is the ONLY place on the page that runs warm — point these two at
+  // var(--accent-rgb)/var(--accent-hot) to bring it back to brand blue.
+  --glow-rgb: 232, 96, 28;
+  --glow-hot: #ffc79a;
 }
 
 .art-guard__svg {
@@ -315,11 +319,39 @@
   overflow: visible;
 }
 
+// The stroke only defines each band's edge; the tone comes from the
+// stacked gradient fills underneath.
 .art-guard__rings circle {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.05);
+  stroke: rgba(255, 255, 255, 0.055);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
+}
+
+// ---- The wave ------------------------------------------------
+// Rings growing out of the centre to the outer band and fading as they
+// go. Scale and opacity only, so each stays on the compositor — a radius
+// tween would re-path the circle every frame.
+.art-guard__ripple {
+  fill: none;
+  stroke: rgba(var(--glow-rgb), 0.5);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  opacity: 0;
+}
+
+// Motion off: hold one ring part-way out rather than leaving three
+// invisible circles behind.
+.is-static .art-guard__ripple {
+  opacity: 0.28;
+  transform: scale(1.6);
+}
+
+.is-static .art-guard__ripple:nth-child(2),
+.is-static .art-guard__ripple:nth-child(3) {
+  opacity: 0;
 }
 
 // The shield itself: always present, never bright. The travelling light

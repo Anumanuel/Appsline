@@ -20,6 +20,15 @@ return (async () => {
   await wait(900);
   const t1 = read();
 
+  // The wave must be mid-flight and staggered, not all three together.
+  const rip = [...guard.querySelectorAll(".art-guard__ripple")].map((r) => {
+    const cs = getComputedStyle(r);
+    // DOMMatrix rather than parsing the matrix() string — `a` is the
+    // horizontal scale and the ripples only ever scale uniformly.
+    const scale = cs.transform === "none" ? 1 : new DOMMatrix(cs.transform).a;
+    return { scale: +scale.toFixed(2), opacity: +Number(cs.opacity).toFixed(2) };
+  });
+
   const outline = guard.querySelector(".art-guard__outline");
   const os = getComputedStyle(outline);
 
@@ -44,6 +53,8 @@ return (async () => {
     // what picks out a stretch of it, not the base stroke.
     outlineStroke: os.stroke,
     outlineDashed: os.strokeDasharray,
+    wave: rip,
+    waveStaggered: new Set(rip.map((r) => r.scale)).size > 1,
     boltTransform: getComputedStyle(guard.querySelector(".art-guard__bolt")).transform,
   };
 })();

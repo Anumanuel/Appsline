@@ -514,7 +514,42 @@
                   <stop offset="0.42" stop-color="#dcdce1"/>
                   <stop offset="1" stop-color="#83838c"/>
                 </linearGradient>
+                <!-- Off-centre highlight, so the stack of discs reads as lit
+                     from above rather than as flat concentric fills. -->
+                <radialGradient id="guardShade" cx="46%" cy="38%" r="62%">
+                  <stop offset="0" stop-color="#1d1a18"/>
+                  <stop offset="0.55" stop-color="#141312"/>
+                  <stop offset="1" stop-color="#0b0a0a"/>
+                </radialGradient>
               </defs>
+
+              <!--
+                Shaded discs, largest first. Each is filled with the same
+                gradient at a different opacity, so stacking them steps the
+                tone up toward the centre and the boundaries read as soft
+                bands rather than as three hairlines on flat black. The
+                stroke on top only defines the edge.
+              -->
+              <g class="art-guard__shades">
+                <circle cx="120" cy="120" r="145" fill="url(#guardShade)" opacity="0.55"/>
+                <circle cx="120" cy="120" r="112" fill="url(#guardShade)" opacity="0.6"/>
+                <circle cx="120" cy="120" r="82"  fill="url(#guardShade)" opacity="0.68"/>
+              </g>
+
+              <!--
+                The wave. Three rings on one staggered loop, each growing
+                from the centre out to the outermost band and fading as it
+                goes — sonar, not a heartbeat. Driven from bento.js so it
+                pauses with the section and is never built under reduced
+                motion; a CSS keyframe would keep running off-screen and
+                the global reduced-motion rule would snap it to its end
+                state rather than leaving it alone.
+              -->
+              <g class="art-guard__wave">
+                <circle class="art-guard__ripple" cx="120" cy="120" r="60"/>
+                <circle class="art-guard__ripple" cx="120" cy="120" r="60"/>
+                <circle class="art-guard__ripple" cx="120" cy="120" r="60"/>
+              </g>
 
               <g class="art-guard__rings">
                 <circle cx="120" cy="120" r="82"/>
