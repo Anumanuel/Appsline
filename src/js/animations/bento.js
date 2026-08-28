@@ -68,45 +68,121 @@ function traceLight(root) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Shield pulse rings                                                 */
+/*  Security card: glows travelling invisible paths                    */
 /* ------------------------------------------------------------------ */
 
 /**
- * Rings expanding out of the security card's shield.
+ * A small light running around a path, leaving a tail behind it.
  *
- * One timeline driving all three rings on a stagger, rather than three CSS
- * keyframe animations: it pauses with the rest of the section when that
- * scrolls out of view, and it is simply never created under reduced
- * motion. A CSS animation would keep running off-screen, and the global
- * reduced-motion rule only collapses its duration — which snaps the rings
- * to their end state rather than leaving them alone.
+ * The path itself is never stroked. Each glow is four copies of the same
+ * geometry, and every copy is one short dash inside a gap as long as the
+ * rest of the path — so a handful of units are lit and the remaining ~95%
+ * is not painted. On the shield that is the entire point: the contour is a
+ * trajectory, not a drawn shape.
  *
- * Scale and opacity only, so each ring stays on the compositor.
+ * Two details make this work.
+ *
+ * SEAMLESS WRAP. `stroke-dasharray: len (total - len)` makes the pattern
+ * exactly one path-length long, so a single dash and a single gap tile the
+ * closed path perfectly. Sweeping the offset by `total` is then one clean
+ * revolution with no seam. The obvious `len total` spelling gives a pattern
+ * longer than the path and visibly stutters once per lap.
+ *
+ * SHARED LEADING EDGE. With that dasharray, a layer's dash occupies
+ * `-offset` to `-offset + len`, so its leading edge is at `len - offset`.
+ * Setting `offset = len - p` puts every layer's leading edge on the same
+ * point p regardless of its length — so the four lengths become a hot head
+ * with progressively longer, fainter trails behind it, rather than four
+ * dashes drifting apart. That is why one tween drives a proxy value and
+ * writes the offsets, instead of four tweens on four offsets.
  */
-function shieldPulse(root) {
-  const rings = Array.from(root.querySelectorAll(".art-shield__pulse"));
-  if (!rings.length) return null;
+function pathGlow(group) {
+  const layers = Array.from(group.querySelectorAll("[data-len]"));
+  if (!layers.length) return null;
 
-  const tl = gsap.timeline({ repeat: -1, paused: true });
-  const STEP = 1.15;
+  const total = layers[0].getTotalLength();
+  if (!total) return null;
 
-  rings.forEach((ring, i) => {
-    const at = i * STEP;
-
-    tl.fromTo(
-      ring,
-      { scale: 0.72, opacity: 0 },
-      { scale: 2.4, duration: 3.2, ease: "power2.out" },
-      at
-    )
-      // Brightens as it leaves the shield, then thins out as it expands —
-      // a ring that faded linearly read as a flat disc growing.
-      .to(ring, { opacity: 0.6, duration: 0.5, ease: "power2.out" }, at)
-      .to(ring, { opacity: 0, duration: 2.2, ease: "power1.in" }, at + 1);
+  layers.forEach((el) => {
+    const len = Number(el.dataset.len);
+    el.style.strokeDasharray = `${len} ${total - len}`;
+    el.style.strokeDashoffset = String(len);
   });
 
-  tl.set({}, {}, rings.length * STEP);
-  return tl;
+  const head = { p: 0 };
+
+  return gsap.to(head, {
+    p: total,
+    duration: Number(group.dataset.dur) || 12,
+    ease: "none",
+    repeat: -1,
+    paused: true,
+    onUpdate() {
+      for (const el of layers) {
+        el.style.strokeDashoffset = String(Number(el.dataset.len) - head.p);
+      }
+    },
+  });
+}
+
+/**
+ * The security card's whole motion budget: two glows on their own clocks,
+ * a breath on the rings, and a flicker on the bolt.
+ *
+ * The two glows are given durations that do not divide into one another
+ * (13s and 9.4s), so they drift apart and never settle into a visible
+ * rhythm — the card should look almost still and only reveal the movement
+ * when watched.
+ */
+function securityCard(root) {
+  const guard = root.querySelector(".art-guard");
+  if (!guard) return [];
+
+  const loops = Array.from(guard.querySelectorAll("[data-orbit]"))
+    .map(pathGlow)
+    .filter(Boolean);
+
+  // Breath. 1% of scale over 9 seconds is meant to be felt rather than
+  // seen; anything larger reads as a pulse and fights the travelling glow
+  // for attention.
+  const rings = guard.querySelector(".art-guard__rings");
+  if (rings) {
+    loops.push(
+      gsap.fromTo(
+        rings,
+        { transformOrigin: "50% 50%", scale: 1 },
+        {
+          scale: 1.012,
+          duration: 4.5,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          paused: true,
+        }
+      )
+    );
+  }
+
+  // The bolt holds still. Brightness only — no rotation, no scale.
+  const bolt = guard.querySelector(".art-guard__bolt");
+  if (bolt) {
+    loops.push(
+      gsap.fromTo(
+        bolt,
+        { opacity: 0.86 },
+        {
+          opacity: 1,
+          duration: 3.1,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          paused: true,
+        }
+      )
+    );
+  }
+
+  return loops;
 }
 
 /* ------------------------------------------------------------------ */
@@ -115,15 +191,16 @@ export function initBento() {
   const section = document.getElementById("why");
   if (!section) return;
 
-  // The pulse rings start invisible so they can fade in as they expand.
-  // With motion off nothing would ever raise them, so hand the section a
-  // static state that holds one ring instead of leaving the shield bare.
+  // The travelling glows get their dash patterns from JS, so with motion
+  // off nothing would give them one and all four layers would paint the
+  // whole path — drawing the very shield this card must not show. The
+  // static state parks one dim segment on each path from CSS instead.
   if (prefersReducedMotion) {
     section.classList.add("is-static");
     return;
   }
 
-  const loops = [traceLight(section), shieldPulse(section)].filter(Boolean);
+  const loops = [traceLight(section), ...securityCard(section)].filter(Boolean);
 
   if (loops.length) {
     // Only burn frames while the section is on screen.
