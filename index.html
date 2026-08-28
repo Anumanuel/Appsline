@@ -489,30 +489,63 @@
             centred shield glyph on a soft disc, which is what was here, read
             as an icon dropped on a panel rather than as artwork.
           -->
-          <div class="art-orb"></div>
           <!--
-            Shield sitting on the orb, with rings pulsing out of it. The
-            rings are three identical elements on one staggered GSAP loop
-            (js/animations/bento.js) rather than three CSS keyframe
-            animations, so they pause with the rest of the section when it
-            scrolls out of view and stop dead under reduced motion instead
-            of snapping to their end state.
+            Concentric rings, a dim shield outline, a silver bolt, and two
+            lights running laps.
+
+            The shield IS drawn here, at a low grey. That is what the
+            reference does: the outline is always faintly present and the
+            travelling glow lights the stretch it happens to be crossing,
+            which is why its left shoulder and lower curve read bright
+            while the rest stays dim. Leaving the contour unpainted and
+            showing only the moving segment (an earlier attempt) loses the
+            shape entirely between passes.
+
+            Each glow is four dashes of the same geometry sharing one
+            leading edge — see pathGlow() in js/animations/bento.js. Layer
+            lengths give a hot head with progressively longer, fainter
+            trails, which is a comet without an SVG filter.
           -->
-          <div class="art-shield">
-            <span class="art-shield__pulse"></span>
-            <span class="art-shield__pulse"></span>
-            <span class="art-shield__pulse"></span>
-            <svg class="art-shield__glyph" viewBox="0 0 24 24" fill="none">
-              <path d="M12 1.8 20 5.4v6c0 5-3.4 8.6-8 11-4.6-2.4-8-6-8-11v-6l8-3.6Z"
-                    fill="rgba(255,255,255,.07)" stroke="currentColor" stroke-width="1.3"
-                    stroke-linejoin="round"/>
-              <rect x="8.4" y="11.1" width="7.2" height="5.6" rx="1.4"
-                    stroke="currentColor" stroke-width="1.2"/>
-              <path d="M10.1 11.1V9.6a1.9 1.9 0 0 1 3.8 0v1.5"
-                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <div class="art-guard">
+            <svg class="art-guard__svg" viewBox="0 0 240 240" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="boltFill" x1="0.15" y1="0" x2="0.7" y2="1">
+                  <stop offset="0" stop-color="#ffffff"/>
+                  <stop offset="0.42" stop-color="#dcdce1"/>
+                  <stop offset="1" stop-color="#83838c"/>
+                </linearGradient>
+              </defs>
+
+              <g class="art-guard__rings">
+                <circle cx="120" cy="120" r="82"/>
+                <circle cx="120" cy="120" r="112"/>
+                <circle cx="120" cy="120" r="145"/>
+              </g>
+
+              <!-- The shield, always faintly there. -->
+              <path class="art-guard__outline"
+                    d="M120 50 L70 70 Q66 72 66 77 L66 128 Q66 158 120 188 Q174 158 174 128 L174 77 Q174 72 170 70 Z"/>
+
+              <!-- Light running the middle ring. -->
+              <g class="art-guard__orbit" data-orbit data-dur="12">
+                <circle class="is-tail"  cx="120" cy="120" r="112" data-len="104"/>
+                <circle class="is-mid"   cx="120" cy="120" r="112" data-len="44"/>
+                <circle class="is-bloom" cx="120" cy="120" r="112" data-len="15"/>
+                <circle class="is-head"  cx="120" cy="120" r="112" data-len="10"/>
+              </g>
+
+              <!-- Light running the shield outline. -->
+              <g class="art-guard__orbit" data-orbit data-dur="8.6">
+                <path class="is-tail"  data-len="88" d="M120 50 L70 70 Q66 72 66 77 L66 128 Q66 158 120 188 Q174 158 174 128 L174 77 Q174 72 170 70 Z"/>
+                <path class="is-mid"   data-len="38" d="M120 50 L70 70 Q66 72 66 77 L66 128 Q66 158 120 188 Q174 158 174 128 L174 77 Q174 72 170 70 Z"/>
+                <path class="is-bloom" data-len="14" d="M120 50 L70 70 Q66 72 66 77 L66 128 Q66 158 120 188 Q174 158 174 128 L174 77 Q174 72 170 70 Z"/>
+                <path class="is-head"  data-len="9"  d="M120 50 L70 70 Q66 72 66 77 L66 128 Q66 158 120 188 Q174 158 174 128 L174 77 Q174 72 170 70 Z"/>
+              </g>
+
+              <!-- Stationary centre. -->
+              <path class="art-guard__bolt" d="M129 96 L105 127 H117 L112 146 L136 115 H124 Z" fill="url(#boltFill)"/>
             </svg>
           </div>
-          <span class="art-spark"></span>
         </div>
         <div class="bento__head">
           <h3 class="bento__title">Security-first approach</h3>

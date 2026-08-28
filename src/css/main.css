@@ -1724,54 +1724,82 @@ html.is-nav-pill .announce {
   filter: drop-shadow(0 0 5px rgba(var(--accent-rgb), 0.9));
 }
 
-.art-orb {
+.art-guard {
   position: absolute;
-  right: -14%;
-  bottom: -34%;
-  width: 78%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 38% 30%, #1b1b21 0%, #131318 40%, #0b0b0e 72%);
-  box-shadow: inset 0 0 60px -12px rgba(var(--accent-rgb), 0.2), inset 6px 10px 40px -18px rgba(255, 255, 255, 0.14);
-}
-
-.art-shield {
-  position: absolute;
-  left: 70%;
-  top: 70%;
+  left: 50%;
+  top: 66%;
   translate: -50% -50%;
-  display: grid;
-  place-items: center;
-  width: 30%;
+  width: min(70%, 300px);
   aspect-ratio: 1;
+  --glow-rgb: 255, 122, 42;
+  --glow-hot: #ffd9b0;
 }
 
-.art-shield__glyph {
-  position: relative;
-  z-index: 2;
+.art-guard__svg {
   width: 100%;
   height: 100%;
-  color: rgba(255, 255, 255, 0.8);
-  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.5));
+  overflow: visible;
 }
 
-.art-shield__pulse {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--accent-rgb), 0.55);
-  opacity: 0;
-  pointer-events: none;
+.art-guard__rings circle {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
 
-.is-static .art-shield__pulse {
-  opacity: 0.35;
-  transform: scale(1.5);
+.art-guard__outline {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
 
-.is-static .art-shield__pulse:nth-child(2),
-.is-static .art-shield__pulse:nth-child(3) {
-  opacity: 0;
+.art-guard__orbit circle,
+.art-guard__orbit path {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.art-guard__orbit .is-tail {
+  stroke: rgba(var(--glow-rgb), 0.2);
+  stroke-width: 1.5;
+}
+
+.art-guard__orbit .is-mid {
+  stroke: rgba(var(--glow-rgb), 0.62);
+  stroke-width: 1.6;
+}
+
+.art-guard__orbit .is-bloom {
+  stroke: rgba(var(--glow-rgb), 0.3);
+  stroke-width: 9;
+}
+
+.art-guard__orbit .is-head {
+  stroke: var(--glow-hot);
+  stroke-width: 1.8;
+}
+
+.is-static .art-guard__orbit .is-head {
+  stroke-dasharray: 10 3000;
+  stroke-dashoffset: -70;
+}
+
+.is-static .art-guard__orbit .is-bloom {
+  stroke-dasharray: 15 3000;
+  stroke-dashoffset: -68;
+}
+
+.is-static .art-guard__orbit .is-tail,
+.is-static .art-guard__orbit .is-mid {
+  stroke: none;
+}
+
+.art-guard__bolt {
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 18px rgba(var(--glow-rgb), 0.3));
 }
 
 .art-bars {
@@ -1798,19 +1826,6 @@ html.is-nav-pill .announce {
   background: linear-gradient(to top, rgba(var(--accent-rgb), 0.1), rgba(var(--accent-rgb), 0.55));
   border-color: rgba(var(--accent-rgb), 0.4);
   box-shadow: 0 0 26px -6px rgba(var(--accent-rgb), 0.75);
-}
-
-.art-spark {
-  position: absolute;
-  right: 22%;
-  bottom: 26%;
-  width: 92px;
-  height: 2px;
-  border-radius: 2px;
-  transform: rotate(-24deg);
-  transform-origin: 100% 50%;
-  background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.5) 62%, var(--accent-hot) 94%, #fff);
-  box-shadow: 0 0 18px 3px rgba(var(--accent-rgb), 0.5);
 }
 
 .art-frame {
